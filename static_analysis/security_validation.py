@@ -27,7 +27,16 @@ _TARGET_CHECKS = {
         "unprotected-upgradeable",
     ),
     "weakrandomness": ("bad-prng",),
+    "badrandomness": ("bad-prng",),
     "timestampdependence": ("block-timestamp",),
+    "dangerousselfdestruct": ("suicidal",),
+    "denialofservice": (
+        "costly-operations-in-loop",
+        "calls-in-loop",
+        "msg-value-in-loop",
+        "return-bomb",
+    ),
+    "integeroverflow": ("divide-before-multiply",),
 }
 
 _SEVERITY_ORDER = {"critical": 4, "high": 3, "medium": 2, "low": 1, "informational": 0}
@@ -79,7 +88,8 @@ def _finding_identity(finding: Mapping[str, Any]) -> Tuple[str, Tuple[str, ...],
         return check, functions, ""
 
     description = str(finding.get("description", "")).lower()
-    description = re.sub(r"\b[\w./-]+#l\d+(?:-l?\d+)?\b", "", description)
+    description = re.sub(r"\([^)]*#(?:l)?\d+(?:-l?\d+)?\)", "", description)
+    description = re.sub(r"\b[\w./-]+#(?:l)?\d+(?:-l?\d+)?\b", "", description)
     description = re.sub(r"\bline\s+\d+(?:\s*[-–]\s*\d+)?\b", "", description)
     description = re.sub(r"\s+", " ", description).strip()
     return check, (), description
@@ -100,6 +110,14 @@ def _is_target_finding(finding: Mapping[str, Any], vulnerabilities: Iterable[Any
         if any(check.startswith(prefix) for prefix in prefixes):
             return True
     return False
+
+
+def has_target_detector_finding(results: Any, vulnerabilities: Iterable[Any]) -> bool:
+    """Return whether Slither reported at least one target vulnerability."""
+    return any(
+        _is_target_finding(finding, vulnerabilities)
+        for finding in _flatten_findings(results)
+    )
 
 
 def _finding_summary(finding: Mapping[str, Any]) -> Dict[str, Any]:

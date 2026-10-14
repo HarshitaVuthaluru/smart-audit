@@ -1,0 +1,8 @@
+--- a/ReentrancyVault.sol
++++ b/ReentrancyVault_patched.sol
+@@ -13,0 +14,2 @@
++        balances[msg.sender] -= amount;
++
+@@ -16,2 +17,0 @@
+-
+-        balances[msg.sender] -= amount;

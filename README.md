@@ -51,6 +51,7 @@ The system is an analysis aid, not a substitute for a professional audit or a gu
 ### 🤖 Local AI-powered analysis
 
 - Uses **Ollama** locally with **`qwen2.5-coder:7b`** for the Analyzer, Skeptic, Exploiter, Generator, Runner repair, and project-context roles.
+- The CLI's primary flow runs broad and focused LLM detection, then independently cross-checks each candidate against Slither using category, source-location, and evidence agreement scores. Candidates are labeled **Confirmed**, **Partially Supported**, or **Unconfirmed**; a score is an analysis signal, not a proof of exploitability.
 - The Analyzer combines the contract source, function summary, Slither evidence, vulnerability category guidance, and retrieved knowledge snippets into a structured JSON review.
 - Deterministic source rules are merged with LLM findings; findings are validated, deduplicated, and given source snippets.
 - The Skeptic re-checks each proposed finding against the original Solidity source, evidence, and affected functions, returning verdicts and calibrated confidence. If the local response is unavailable or malformed, the implementation retains the existing analyzer evidence rather than silently reporting no findings.
@@ -84,6 +85,13 @@ The system is an analysis aid, not a substitute for a professional audit or a gu
 - `GeneratorAgent.generate_secure_contract` receives the original source and the validated findings, requests complete Solidity only, normalizes mechanical generation artifacts, and applies deterministic security and generation-quality checks.
 - If the first draft has blocking failures, it performs one targeted repair-generation pass and revalidates it.
 - The accepted revision is compiled with local `solc` (with one safe normalization retry where applicable) and then analyzed with Slither again. A downloadable file is exposed only after compilation and final static validation pass.
+
+### 🩹 SmartAudit-X candidate remediation
+
+- `python main.py --contract path/to/Contract.sol --verify-only` runs detection and Slither cross-verification without generating PoCs or patches.
+- `python main.py --contract path/to/Contract.sol --remediate` asks the local model for a candidate patch, saves it and a unified diff under `remediations/`, re-runs Slither, compiles both versions, and compares their public/external ABI signatures. Failed verification feedback is used for up to three candidate-generation attempts.
+- Candidate patches never overwrite the source contract. A passing compile and unchanged ABI provide functional-preservation evidence, but do not replace application-specific regression tests or prove semantic equivalence.
+- The legacy exploit-plan/PoC workflow is opt-in from the CLI with `--poc`. `--slither-only` runs static analysis without invoking LLM agents.
 
 ### 📊 Analysis results and live workflow
 
@@ -251,7 +259,7 @@ The backend is configured to run on `http://localhost:3000`.
 python main.py --contract path/to/Contract.sol
 ```
 
-Useful CLI options implemented in `main.py` include `--no-rag`, `--skip-poc`, `--no-auto-run`, `--max-retries`, `--export-md`, and `--export-json`.
+Useful CLI options implemented in `main.py` include `--verify-only`, `--slither-only`, `--remediate`, `--poc`, `--no-rag`, `--skip-poc`, `--no-auto-run`, `--max-retries`, `--export-md`, and `--export-json`.
 
 ---
 

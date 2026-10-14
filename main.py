@@ -2,6 +2,7 @@ import os
 import json
 import argparse
 import re
+from html import escape
 from collections import Counter
 from pathlib import Path
 from dotenv import load_dotenv
@@ -101,6 +102,15 @@ def parse_arguments():
     # Add PoC generation and report export options
     parser.add_argument("--skip-poc", action="store_true",
                       help="Skip PoC generation and stop at exploit plans")
+    parser.add_argument("--poc", action="store_true",
+                      help="Run the legacy exploit-plan and optional PoC workflow")
+    parser.add_argument("--remediate", action="store_true",
+                      help="Generate candidate Solidity patches and re-verify them")
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument("--verify-only", action="store_true",
+                       help="Run LLM detection and independent Slither verification only")
+    modes.add_argument("--slither-only", action="store_true",
+                       help="Run static analysis without invoking LLM agents")
     parser.add_argument("--export-md", action="store_true",
                       help="Export analysis report as Markdown file")
     parser.add_argument("--export-json", help="Export results to a JSON file for automated analysis")
@@ -122,6 +132,69 @@ def export_results_to_html(contract_path, results):
     rechecked_vulns, merged_findings_count = _deduplicate_report_findings(results.get("rechecked_vulnerabilities", []))
     pocs = results.get("generated_pocs", [])
     poc_metrics = results.get("poc_metrics", {})
+    verified = results.get("verified_vulnerabilities", [])
+    independent_slither = results.get("independent_slither_findings", [])
+    remediations = results.get("remediations", [])
+    detection_candidates = results.get("candidates") or (
+        results.get("broad_findings", []) + results.get("targeted_findings", [])
+    )
+
+    def html_text(value):
+        return escape(str(value or ""))
+
+    def detection_pass_label(item):
+        return ", ".join(
+            item.get("detection_passes") or [item.get("detection_pass", "")]
+        )
+
+    verification_rows = "".join(
+        "<tr>"
+        f"<td>{html_text(item.get('vulnerability_type'))}</td>"
+        f"<td>{html_text(item.get('function'))}</td>"
+        f"<td>{html_text(item.get('category_agreement'))}</td>"
+        f"<td>{html_text(item.get('location_agreement'))}</td>"
+        f"<td>{html_text(item.get('evidence_agreement'))}</td>"
+        f"<td>{html_text(item.get('verification_score'))}</td>"
+        f"<td>{html_text(item.get('verification_status'))}</td>"
+        "</tr>"
+        for item in verified
+    ) or "<tr><td colspan='7'>No LLM candidates were available.</td></tr>"
+    detection_rows = "".join(
+        "<tr>"
+        f"<td>{html_text(detection_pass_label(item))}</td>"
+        f"<td>{html_text(item.get('vulnerability_type'))}</td>"
+        f"<td>{html_text(item.get('function'))}</td>"
+        f"<td>{html_text(item.get('source_location', {}).get('start_line'))}-"
+        f"{html_text(item.get('source_location', {}).get('end_line'))}</td>"
+        f"<td>{html_text(item.get('confidence'))}</td>"
+        f"<td>{html_text(item.get('explanation'))}</td>"
+        "</tr>"
+        for item in detection_candidates
+    ) or "<tr><td colspan='6'>No broad or targeted LLM candidates.</td></tr>"
+    slither_rows = "".join(
+        "<tr>"
+        f"<td>{html_text(item.get('check'))}</td>"
+        f"<td>{html_text(item.get('impact'))}</td>"
+        f"<td>{html_text(', '.join(item.get('functions', [])))}</td>"
+        f"<td>{html_text(item.get('description'))}</td>"
+        "</tr>"
+        for item in independent_slither
+    ) or "<tr><td colspan='4'>No Slither findings.</td></tr>"
+    remediation_cards = "".join(
+        "<details class='summary-card'><summary>"
+        f"Attempt {html_text(item.get('attempt'))}: "
+        f"{html_text(Path(item.get('candidate_path', '')).name)} — "
+        f"{'PASS' if item.get('reverification', {}).get('passed') else 'NOT VERIFIED'}"
+        "</summary>"
+        f"<p>Vo={html_text(item.get('reverification', {}).get('Vo'))} → "
+        f"Vp={html_text(item.get('reverification', {}).get('Vp'))}; "
+        f"Security fix: {html_text(item.get('reverification', {}).get('security_fix'))}; "
+        f"Functional preservation: "
+        f"{html_text(item.get('reverification', {}).get('functional_preservation', {}).get('passed'))}</p>"
+        f"<pre><code>{html_text(item.get('unified_diff', ''))}</code></pre>"
+        "</details>"
+        for item in remediations
+    ) or "<p>No remediation candidate was generated.</p>"
 
     # Calculate detailed statistics
     total_vulns = len(rechecked_vulns)
@@ -369,6 +442,10 @@ def export_results_to_html(contract_path, results):
         .bar-row {{ display:grid; grid-template-columns:70px 1fr 24px; gap:.5rem; align-items:center; margin:.45rem 0; font-size:.85rem; }}
         .bar {{ height:10px; background:var(--bg-accent); border-radius:99px; overflow:hidden; }}
         .bar i {{ display:block; height:100%; background:var(--primary); }}
+        .smart-audit-panel {{ background:var(--bg-card); border:1px solid var(--border); border-radius:.5rem; padding:1rem; margin:1rem 0 2rem; overflow:auto; }}
+        .smart-audit-panel table {{ width:100%; border-collapse:collapse; margin:.75rem 0 1.25rem; font-size:.85rem; }}
+        .smart-audit-panel th,.smart-audit-panel td {{ border:1px solid var(--border); padding:.5rem; text-align:left; vertical-align:top; }}
+        .smart-audit-panel pre {{ max-height:32rem; }}
     </style>
 </head>
 <body>
@@ -394,6 +471,23 @@ def export_results_to_html(contract_path, results):
             <section class="summary-card"><h3>Performance Dashboard</h3><p>Tokens: {token_total:,}</p><p>Runtime: {runtime:.2f}s</p><p>Tokens/finding: {tokens_per_vulnerability:.1f}; time/finding: {time_per_vulnerability:.2f}s</p><p>Average repairs: {average_repairs:.2f}</p><p>Compile success: {compile_rate:.1f}%</p><p>Execution success: {execution_rate:.1f}%</p><p>Compilation failures: {compilation_failures_count}; execution failures: {execution_failures_count}</p><h4>Agent Timeline</h4><ul>{agent_times_html}</ul></section>
             <section class="summary-card"><h3>Recommended Fixes</h3><ul>{recs_html}</ul><p><strong>Audit conclusion:</strong> Address Critical/High findings first, then re-run generated PoCs and regression tests.</p></section>
         </div>
+        <section class="smart-audit-panel">
+            <h2>SmartAudit-X Detect → Verify → Remediate → Re-verify</h2>
+            <details><summary>Broad and targeted LLM candidates</summary>
+                <table><thead><tr><th>Pass</th><th>Candidate</th><th>Function</th><th>Lines</th><th>Confidence</th><th>Explanation</th></tr></thead>
+                <tbody>{detection_rows}</tbody></table>
+            </details>
+            <details open><summary>LLM candidate cross-verification (Sc, Sl, Se, Sv)</summary>
+                <table><thead><tr><th>Candidate</th><th>Function</th><th>Sc</th><th>Sl</th><th>Se</th><th>Sv</th><th>Status</th></tr></thead>
+                <tbody>{verification_rows}</tbody></table>
+            </details>
+            <details><summary>Independent Slither analysis ({len(independent_slither)} finding(s))</summary>
+                <table><thead><tr><th>Detector</th><th>Impact</th><th>Functions</th><th>Evidence</th></tr></thead>
+                <tbody>{slither_rows}</tbody></table>
+            </details>
+            <h3>Candidate remediations and patch validation</h3>
+            {remediation_cards}
+        </section>
         <div class="report-layout">
             <div class="sidebar"><h3>Findings</h3><div class="sidebar-list">{vulns_sidebar_html}</div></div>
             <div class="content-panel">{vulns_html}</div>
@@ -432,6 +526,10 @@ def main():
     performance_tracker.reset()
     performance_tracker.start_stage("initialization")
     args = parse_arguments()
+    if args.verify_only and args.remediate:
+        raise SystemExit("--verify-only cannot be combined with --remediate.")
+    if args.slither_only and (args.remediate or args.poc):
+        raise SystemExit("--slither-only cannot be combined with --remediate or --poc.")
 
     run_config = {
         "analyzer_model": args.analyzer_model,
@@ -442,6 +540,10 @@ def main():
         "all_models": args.all_models,
         "use_rag": not args.no_rag,
         "skip_poc": args.skip_poc,
+        "poc": args.poc,
+        "remediate": args.remediate,
+        "verify_only": args.verify_only,
+        "slither_only": args.slither_only,
         "auto_run": not args.no_auto_run
     }
     performance_tracker.set_run_config(run_config)
@@ -461,7 +563,7 @@ def main():
             generator_model=args.all_models,
             context_model=args.all_models,
             base_url=args.api_base,
-            skip_poc_generation=args.skip_poc,
+            skip_poc_generation=not args.poc or args.skip_poc,
             export_markdown=args.export_md
         )
     else:
@@ -472,7 +574,7 @@ def main():
             generator_model=args.generator_model,
             context_model=args.context_model,
             base_url=args.api_base,
-            skip_poc_generation=args.skip_poc,
+            skip_poc_generation=not args.poc or args.skip_poc,
             export_markdown=args.export_md
         )
 
@@ -519,18 +621,56 @@ def main():
         "call_graph": call_graph,
         "source_code": source_code,
         "detector_results": detector_results,
+        "source_path": str(Path(filepath).resolve()),
         "target_contract": {"path": target_filename, "filename": target_filename},
     }
 
-    performance_tracker.start_stage("llm_analysis")
-    coordinator = AgentCoordinator(model_config=model_config, use_rag=not args.no_rag)
-    auto_run_config = {"auto_run": not args.no_auto_run, "max_retries": args.max_retries}
+    if args.slither_only:
+        from rich.console import Console
+        from rich.table import Table
+        from llm_agents.agents.verification_agent import VerificationAgent
+        static_results = VerificationAgent().verify([], detector_results)
+        static_table = Table(title="Independent Slither Analysis")
+        for column in ("Detector", "Impact", "Functions", "Evidence"):
+            static_table.add_column(column)
+        for finding in static_results["independent_slither_findings"]:
+            static_table.add_row(
+                str(finding.get("check", "")),
+                str(finding.get("impact", "")),
+                ", ".join(finding.get("functions", [])),
+                str(finding.get("description", ""))[:300],
+            )
+        Console().print(static_table)
+        results = {
+            "status": "slither_only",
+            "rechecked_vulnerabilities": [],
+            "generated_pocs": [],
+            "poc_metrics": {},
+            "broad_findings": [],
+            "targeted_findings": [],
+            "candidates": [],
+            "verified_vulnerabilities": [],
+            "independent_slither_findings": static_results["independent_slither_findings"],
+            "remediations": [],
+        }
+    else:
+        performance_tracker.start_stage("llm_analysis")
+        coordinator = AgentCoordinator(model_config=model_config, use_rag=not args.no_rag)
+        auto_run_config = {
+            "auto_run": not args.no_auto_run,
+            "max_retries": args.max_retries,
+            "remediate": args.remediate,
+            "verify_only": args.verify_only,
+            "enable_poc": args.poc and not args.skip_poc and not args.verify_only,
+        }
 
-    try:
-        results = coordinator.analyze_contract(contract_info, auto_run_config=auto_run_config)
-    except Exception as e:
-        print_error(f"Analysis failed: {e}")
-        return
+        try:
+            results = coordinator.analyze_contract(
+                contract_info, auto_run_config=auto_run_config
+            )
+        except Exception as e:
+            print_error(f"Analysis failed: {e}")
+            return
 
     performance_tracker.start_stage("export")
     if args.export_json:

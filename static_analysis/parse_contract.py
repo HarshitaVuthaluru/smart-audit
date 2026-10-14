@@ -10,6 +10,8 @@ from pathlib import Path
 import json
 import os
 import re
+import shutil
+import subprocess
 from .extract_contracts import process_contract_file
 from utils.function_identifiers import canonical_function_id
 
@@ -33,13 +35,39 @@ def _solc_for_source(filepath: str) -> tuple[str | None, str]:
     if not match or int(match.group(2)) >= 5:
         return None, "--via-ir --optimize"
 
-    legacy_solc = Path(r"C:\Solidity\solc-0.4.26\solc.exe")
-    if not legacy_solc.is_file():
-        raise RuntimeError(
-            "Solidity 0.4.x source requires the local legacy compiler at "
-            f"{legacy_solc}, but it is unavailable."
-        )
-    return str(legacy_solc), "--optimize"
+    legacy_candidates = [
+        os.environ.get("SOLC_0_4_26"),
+        str(Path.home() / ".solc-select" / "artifacts" / "solc-0.4.26" / "solc-0.4.26.exe"),
+        str(Path.home() / ".solc-select" / "artifacts" / "solc-0.4.26" / "solc-0.4.26"),
+        r"C:\Solidity\solc-0.4.26\solc.exe",
+        shutil.which("solc-0.4.26"),
+    ]
+    for candidate in legacy_candidates:
+        if candidate and Path(candidate).is_file():
+            return str(Path(candidate).resolve()), "--optimize"
+
+    # solc-select installs a PATH shim for the currently selected version.
+    # Reuse it only when it is already selecting the compatible compiler;
+    # never change the user's global selection from an analysis invocation.
+    active_solc = shutil.which("solc")
+    if active_solc:
+        try:
+            version = subprocess.run(
+                [active_solc, "--version"],
+                capture_output=True,
+                text=True,
+                timeout=10,
+                check=False,
+            )
+        except OSError as exc:
+            raise RuntimeError(f"Could not inspect the active solc compiler: {exc}") from exc
+        if version.returncode == 0 and re.search(r"\b0\.4\.\d+\b", version.stdout + version.stderr):
+            return active_solc, "--optimize"
+
+    raise RuntimeError(
+        "Solidity 0.4.x source requires solc 0.4.x. Set SOLC_0_4_26, install "
+        "the compiler with solc-select, or provide a solc-0.4.26 executable."
+    )
 
 
 def analyze_contract(filepath: str):

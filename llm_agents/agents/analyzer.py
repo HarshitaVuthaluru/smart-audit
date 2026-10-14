@@ -104,6 +104,14 @@ class AnalyzerAgent:
                     print_warning(f"Local LLM analysis unavailable; using verified static findings: {exc}")
                     vulnerabilities = []
 
+                for finding in vulnerabilities:
+                    finding["detection_pass"] = "broad"
+                broad_findings = self._normalize_candidates(vulnerabilities, contract_info, "broad")
+                targeted_findings = self._run_targeted_analysis(
+                    contract_info, vulnerabilities
+                )
+                vulnerabilities.extend(targeted_findings)
+
                 # Parse results
                 progress.update(task, description="Processing results...")
                 vulnerabilities = self._add_deterministic_findings(vulnerabilities, contract_info)
@@ -115,13 +123,156 @@ class AnalyzerAgent:
 
                 progress.update(task, completed=True)
 
-            return {"vulnerabilities": vulnerabilities}
+            final_candidates = self._normalize_candidates(
+                vulnerabilities, contract_info, "combined"
+            )
+            return {
+                "vulnerabilities": vulnerabilities,
+                "broad_findings": [
+                    item for item in final_candidates
+                    if "broad" in item.get("detection_passes", [])
+                ],
+                "targeted_findings": [
+                    item for item in final_candidates
+                    if "targeted" in item.get("detection_passes", [])
+                ],
+                "candidates": final_candidates,
+            }
 
         except Exception as e:
             import traceback
             traceback.print_exc()
             print_warning(f"Analysis error: {repr(e)}")
             return {"vulnerabilities": [], "error": repr(e)}
+
+    def _run_targeted_analysis(self, contract_info: Dict, broad_findings: list) -> list:
+        """Re-audit functions surfaced as high-risk during broad analysis."""
+        details = self._source_function_details(contract_info)
+        selected_ids = {
+            str(function_id)
+            for finding in broad_findings
+            for function_id in finding.get("affected_functions", [])
+        }
+        selected = [
+            detail for detail in details
+            if detail.get("content")
+            and (
+                detail.get("function_id") in selected_ids
+                or (
+                    detail.get("visibility") in {"public", "external"}
+                    and re.search(
+                        r"\.call\b|\.send\s*\(|\.transfer\s*\(|selfdestruct\s*\(|"
+                        r"\b(?:owner|admin|role)\b|block\.(?:timestamp|prevrandao|difficulty)",
+                        detail.get("content", ""),
+                        re.I,
+                    )
+                )
+            )
+        ]
+        if not selected:
+            return []
+
+        functions = "\n\n".join(
+            f"FUNCTION {detail.get('function_id')} "
+            f"(lines {detail.get('start_line')}-{detail.get('end_line')}):\n"
+            f"{detail.get('content', '')[:2200]}"
+            for detail in selected[:12]
+        )
+        prior_findings = json.dumps(
+            [
+                {
+                    "type": finding.get("vulnerability_type"),
+                    "functions": finding.get("affected_functions", []),
+                }
+                for finding in broad_findings
+            ],
+            ensure_ascii=True,
+        )
+        prompt = (
+            "Perform a focused second-pass security audit of only these high-risk "
+            "Solidity functions. Confirm, refine, or add real vulnerabilities; do not "
+            "repeat a finding unless the evidence is materially distinct. Examine "
+            "reentrancy/state ordering, authorization, unchecked call results, "
+            "arithmetic, randomness, timestamp dependence, selfdestruct, and denial "
+            "of service. Cite exact function IDs and source evidence. Return JSON only "
+            "as {\"vulnerabilities\":[{\"vulnerability_type\":\"...\","
+            "\"confidence_score\":0.0,\"reasoning\":\"...\","
+            "\"affected_functions\":[\"exactFunctionId\"],\"impact\":\"...\","
+            "\"exploitation_scenario\":\"...\"}]}. Do not invent source code.\n\n"
+            f"Broad-pass candidates: {prior_findings}\n\n{functions}"
+        )
+        try:
+            response = self._call_llm(
+                "You are conducting a focused, source-grounded Solidity security review. "
+                "Return a JSON object only; be conservative and cite concrete evidence.",
+                prompt,
+            )
+            findings = self._parse_llm_response(response)
+            for finding in findings:
+                finding["detection_pass"] = "targeted"
+            return findings
+        except Exception as exc:
+            logger.warning("Targeted Solidity analysis failed: %s", exc)
+            print_warning(f"Targeted analysis unavailable: {exc}")
+            return []
+
+    @staticmethod
+    def _normalize_candidates(findings: list, contract_info: Dict, analysis_pass: str) -> list:
+        """Map legacy analyzer records into the SmartAudit-X candidate schema."""
+        details = AnalyzerAgent._source_function_details(contract_info)
+        contract_name = (
+            contract_info.get("target_contract", {}).get("name")
+            or next(
+                (detail.get("contract") for detail in details if detail.get("contract")),
+                contract_info.get("target_contract", {}).get("filename", "<unknown>"),
+            )
+        )
+        normalized = []
+        for finding in findings:
+            affected = finding.get("affected_functions", []) or []
+            selected = next(
+                (
+                    detail for detail in details
+                    if detail.get("function_id") in affected
+                    or detail.get("function") in affected
+                ),
+                {},
+            )
+            confidence = finding.get("confidence", finding.get("confidence_score", 0))
+            try:
+                confidence = max(0.0, min(1.0, float(confidence)))
+            except (TypeError, ValueError):
+                confidence = 0.0
+            location = finding.get("source_location")
+            if not isinstance(location, dict):
+                location = {
+                    "start_line": selected.get("start_line"),
+                    "end_line": selected.get("end_line"),
+                }
+            normalized.append({
+                "vulnerability_type": finding.get("vulnerability_type", "unknown"),
+                "severity": finding.get("severity", finding.get("impact", "Unknown")),
+                "contract": finding.get("contract", contract_name),
+                "function": finding.get(
+                    "function",
+                    affected[0] if affected else selected.get("function_id", ""),
+                ),
+                "affected_functions": list(affected),
+                "source_location": location,
+                "explanation": finding.get(
+                    "explanation", finding.get("reasoning", "")
+                ),
+                "evidence": finding.get(
+                    "evidence", finding.get("code_snippet", "")
+                ),
+                "confidence": confidence,
+                "detection_pass": finding.get("detection_pass", analysis_pass),
+                "detection_passes": finding.get(
+                    "detection_passes",
+                    [finding.get("detection_pass", analysis_pass)],
+                ),
+            })
+        return normalized
 
     def _deduplicate_vulnerabilities(self, vulnerabilities: list) -> list:
         """Remove redundant findings of the same type in the same functions."""
@@ -141,6 +292,16 @@ class AnalyzerAgent:
             new_confidence = self._confidence_value(v.get("confidence_score"))
             stronger, supporting = (v, current) if new_confidence > current_confidence else (current, v)
             merged[key] = dict(stronger)
+            passes = set(current.get("detection_passes", []))
+            passes.update(v.get("detection_passes", []))
+            passes.update(
+                value for value in (
+                    current.get("detection_pass"),
+                    v.get("detection_pass"),
+                ) if value
+            )
+            if passes:
+                merged[key]["detection_passes"] = sorted(passes)
             supporting_reason = str(supporting.get("reasoning", "")).strip()
             if supporting_reason and supporting_reason not in merged[key].get("reasoning", ""):
                 merged[key]["reasoning"] = (
@@ -735,6 +896,18 @@ class AnalyzerAgent:
                 logger.info("Mapped function-signature hash %r to %s", value, matches[0])
                 return matches[0]
 
+        # Some local models return a truncated function-signature hash rather
+        # than the ABI selector. Resolve it only when it uniquely identifies a
+        # supplied signature.
+        if re.fullmatch(r"0x[0-9a-f]{9,62}", selector):
+            matches = [
+                function_id for function_id in allowed
+                if ("0x" + keccak(text=function_id).hex()).startswith(selector)
+            ]
+            if len(matches) == 1:
+                logger.info("Mapped truncated function-signature hash %r to %s", value, matches[0])
+                return matches[0]
+
         name = normalized.split("(", 1)[0]
         matches = [function_id for function_id in allowed if function_id.split("(", 1)[0] == name]
         # Signature-less references (including ``withdraw()``) are only safe
@@ -1189,14 +1362,8 @@ Format findings as:
         print(response_text)
         print("=====================================\n")
 
-        return [{
-            "vulnerability_type": "unknown",
-            "confidence_score": 0.0,
-            "reasoning": "No valid JSON found",
-            "affected_functions": [],
-            "impact": "",
-            "exploitation_scenario": ""
-        }]
+        logger.warning("No valid vulnerability JSON could be recovered from the analyzer response.")
+        return []
 
     @staticmethod
     def _extract_vulnerability_objects(response_text: str) -> list:

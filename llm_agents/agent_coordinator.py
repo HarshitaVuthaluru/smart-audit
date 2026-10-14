@@ -2,6 +2,7 @@
 # File: llm_agents/agent_coordinator.py
 # ==============================
 import os
+import json
 from typing import Dict
 from pathlib import Path
 # Import the new function
@@ -12,6 +13,7 @@ from utils.token_tracker import performance_tracker, token_tracker
 from .agents.analyzer import AnalyzerAgent
 from .agents.exploiter import ExploiterAgent
 from .agents.generator import GeneratorAgent
+from .agents.verification_agent import VerificationAgent
 from .agents.skeptic import SkepticAgent
 from .agents.runner import ExploitRunner
 from .agents.project_context_llm import ProjectContextLLMAgent
@@ -55,6 +57,7 @@ class AgentCoordinator:
 
         self.project_context = ProjectContextLLMAgent(model_config=self.model_config)
         self.analyzer = AnalyzerAgent(self.vuln_retriever, model_config=self.model_config)
+        self.verification_agent = VerificationAgent()
         self.skeptic = SkepticAgent(model_config=self.model_config)
         self.exploiter = ExploiterAgent(model_config=self.model_config)
         self.generator = GeneratorAgent(model_config=self.model_config)
@@ -62,6 +65,7 @@ class AgentCoordinator:
 
     def analyze_contract(self, contract_info: Dict, auto_run_config: Dict = None) -> Dict:
         from rich.console import Console
+        from rich.table import Table
         console = Console()
 
         def log_findings(stage: str, findings: list) -> None:
@@ -119,6 +123,63 @@ class AgentCoordinator:
         console.print("\n[bold blue]🔍 AnalyzerAgent: Starting vulnerability detection...[/bold blue]")
         vuln_results = self.analyzer.analyze(contract_info)
         vulnerabilities = vuln_results.get("vulnerabilities", [])
+        candidates = vuln_results.get("candidates") or self.analyzer._normalize_candidates(
+            vulnerabilities, contract_info, "combined"
+        )
+        verification_results = self.verification_agent.verify(
+            candidates, contract_info.get("detector_results", [])
+        )
+        verified_vulnerabilities = verification_results["verified_vulnerabilities"]
+        console.print(
+            f"[bold blue]VerificationAgent: {len(verified_vulnerabilities)} "
+            f"candidate(s); {len(verification_results['independent_slither_findings'])} "
+            "independent Slither finding(s)[/bold blue]"
+        )
+        detection_table = Table(title="Broad + Targeted LLM Candidates")
+        for column in ("Pass", "Vulnerability", "Function", "Confidence", "Evidence"):
+            detection_table.add_column(column)
+        for candidate in candidates:
+            detection_table.add_row(
+                ", ".join(candidate.get("detection_passes", []))
+                or candidate.get("detection_pass", "combined"),
+                str(candidate.get("vulnerability_type", "")),
+                str(candidate.get("function", "")),
+                f"{candidate.get('confidence', 0):.2f}",
+                str(candidate.get("explanation", ""))[:240],
+            )
+        if candidates:
+            console.print(detection_table)
+
+        verification_table = Table(title="Cross-Verification (Sc, Sl, Se, Sv)")
+        for column in (
+            "Vulnerability", "Function", "Sc", "Sl", "Se", "Sv", "Status",
+        ):
+            verification_table.add_column(column)
+        for finding in verified_vulnerabilities:
+            verification_table.add_row(
+                str(finding.get("vulnerability_type", "")),
+                str(finding.get("function", "")),
+                f"{finding.get('category_agreement', 0):.2f}",
+                f"{finding.get('location_agreement', 0):.2f}",
+                f"{finding.get('evidence_agreement', 0):.2f}",
+                f"{finding.get('verification_score', 0):.2f}",
+                str(finding.get("verification_status", "")),
+            )
+        if verified_vulnerabilities:
+            console.print(verification_table)
+
+        slither_table = Table(title="Independent Slither Analysis")
+        for column in ("Detector", "Impact", "Functions", "Evidence"):
+            slither_table.add_column(column)
+        for finding in verification_results["independent_slither_findings"]:
+            slither_table.add_row(
+                str(finding.get("check", "")),
+                str(finding.get("impact", "")),
+                ", ".join(finding.get("functions", [])),
+                str(finding.get("description", ""))[:240],
+            )
+        if verification_results["independent_slither_findings"]:
+            console.print(slither_table)
         if not vulnerabilities:
             console.print("[bold yellow]AnalyzerAgent: No vulnerabilities found[/bold yellow]")
             return {
@@ -126,6 +187,12 @@ class AgentCoordinator:
                 "rechecked_vulnerabilities": [],
                 "generated_pocs": [],
                 "poc_metrics": {},
+                "candidates": candidates,
+                "broad_findings": vuln_results.get("broad_findings", []),
+                "targeted_findings": vuln_results.get("targeted_findings", []),
+                "verified_vulnerabilities": verified_vulnerabilities,
+                "independent_slither_findings": verification_results["independent_slither_findings"],
+                "remediations": [],
             }
 
         console.print(f"[bold green]✓ AnalyzerAgent: Found {len(vulnerabilities)} potential vulnerabilities[/bold green]")
@@ -157,6 +224,100 @@ class AgentCoordinator:
             new_score = v.get('skeptic_confidence', 0)
             change = "↑" if new_score > old_score else "↓" if new_score < old_score else "→"
             console.print(f"  - {v.get('vulnerability_type')}: {old_score:.2f} {change} {new_score:.2f}")
+
+        remediation_results = []
+        if auto_run_config.get("remediate") and not auto_run_config.get("verify_only"):
+            supported = [
+                finding for finding in verified_vulnerabilities
+                if finding.get("verification_status") in {
+                    "Confirmed", "Partially Supported"
+                }
+            ]
+            if supported:
+                from .agents.remediation_agent import RemediationAgent
+                from static_analysis.reverification import reverify_candidate
+
+                source_path = (
+                    contract_info.get("source_path")
+                    or contract_info.get("target_contract", {}).get("path")
+                )
+                if not source_path or not os.path.isfile(source_path):
+                    raise FileNotFoundError(
+                        "Remediation requires the original Solidity file path in "
+                        "contract_info['source_path']."
+                    )
+                remediation_agent = RemediationAgent(self.model_config)
+                output_dir = auto_run_config.get("remediation_dir", "remediations")
+                contract_name = (
+                    contract_info.get("target_contract", {}).get("name")
+                    or contract_info.get("target_contract", {}).get("filename")
+                    or Path(source_path).stem
+                )
+                feedback = ""
+                previous_candidate = ""
+                for attempt in range(1, 4):
+                    patch = remediation_agent.generate_candidate(
+                        contract_info["source_code"],
+                        supported,
+                        contract_name,
+                        output_directory=output_dir,
+                        feedback=feedback,
+                        previous_candidate=previous_candidate,
+                    )
+                    verification = reverify_candidate(
+                        source_path,
+                        patch["candidate_path"],
+                        supported,
+                        contract_info.get("detector_results", []),
+                    )
+                    remediation_results.append({
+                        **patch,
+                        "attempt": attempt,
+                        "reverification": verification,
+                    })
+                    if verification.get("passed"):
+                        break
+                    previous_candidate = patch["candidate_patch"]
+                    feedback = json.dumps({
+                        "functional_preservation": verification.get("functional_preservation"),
+                        "comparison": verification.get("comparison"),
+                        "errors": verification.get("functional_preservation", {}).get("error"),
+                    }, indent=2, default=str)
+                remediation_table = Table(title="Remediation Re-Verification")
+                for column in ("Attempt", "Candidate Patch", "Vo → Vp", "Security", "Preservation", "Result"):
+                    remediation_table.add_column(column)
+                for item in remediation_results:
+                    verification = item["reverification"]
+                    preservation = verification.get("functional_preservation", {})
+                    remediation_table.add_row(
+                        str(item["attempt"]),
+                        str(item["candidate_path"]),
+                        f"{verification.get('Vo')} → {verification.get('Vp')}",
+                        str(verification.get("security_fix")),
+                        str(preservation.get("passed")),
+                        "PASS" if verification.get("passed") else "RETRY / FAILED",
+                    )
+                    console.print(f"[bold]Patch diff: {item['diff_path']}[/bold]")
+                    console.print(item.get("unified_diff", ""), markup=False)
+                console.print(remediation_table)
+            else:
+                console.print(
+                    "[yellow]Remediation skipped: no confirmed or partially supported "
+                    "candidates.[/yellow]"
+                )
+
+        if auto_run_config.get("verify_only") or not auto_run_config.get("enable_poc", True):
+            return {
+                "rechecked_vulnerabilities": rechecked_vulns,
+                "generated_pocs": [],
+                "poc_metrics": {},
+                "candidates": candidates,
+                "broad_findings": vuln_results.get("broad_findings", []),
+                "targeted_findings": vuln_results.get("targeted_findings", []),
+                "verified_vulnerabilities": verified_vulnerabilities,
+                "independent_slither_findings": verification_results["independent_slither_findings"],
+                "remediations": remediation_results,
+            }
 
         # 3. Generate PoCs for high-confidence vulnerabilities
         generated_pocs = []
@@ -302,5 +463,11 @@ class AgentCoordinator:
             "rechecked_vulnerabilities": rechecked_vulns,
             "generated_pocs": generated_pocs,
             "poc_metrics": poc_metrics,
+            "candidates": candidates,
+            "broad_findings": vuln_results.get("broad_findings", []),
+            "targeted_findings": vuln_results.get("targeted_findings", []),
+            "verified_vulnerabilities": verified_vulnerabilities,
+            "independent_slither_findings": verification_results["independent_slither_findings"],
+            "remediations": remediation_results,
             "token_usage": token_tracker.get_usage_summary() if 'token_tracker' in locals() else None
         }
