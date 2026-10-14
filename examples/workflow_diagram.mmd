@@ -1,0 +1,113 @@
+flowchart TD
+    classDef inputClass fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
+    classDef analysisClass fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    classDef agentClass fill:#fff8e1,stroke:#ffa000,stroke-width:2px
+    classDef outputClass fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef vulnerabilityClass fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef codeClass fill:#f5f5f5,stroke:#616161,stroke-width:2px,font-family:monospace
+
+    %% Input Contract
+    InputContract["<pre>// VulnerableLendingContract.sol
+function withdraw(uint256 amount) external {
+    require(balances[msg.sender] >= amount);
+    
+    // Vulnerable: State update after call
+    (bool success,) = msg.sender.call{value: amount}('');
+    require(success, 'Transfer failed');
+    
+    balances[msg.sender] -= amount;
+}</pre>"]:::codeClass
+
+    %% Static Analysis
+    StaticAnalysis["Static Analysis (Slither)"]:::analysisClass
+    SlitherOutput{"<b>Slither Output</b><br>
+- Function: withdraw<br>
+- Detector: reentrancy-eth<br>
+- Impact: High, Confidence: Medium<br>
+- External calls before state changes"}:::analysisClass
+
+    %% Analyzer Agent
+    AnalyzerAgent["Analyzer Agent"]:::agentClass
+    AnalyzerOutput{"<b>Vulnerability Detected</b><br>
+Type: reentrancy<br>
+Score: 0.85<br>
+Functions: withdraw<br>
+Impact: Critical"}:::vulnerabilityClass
+
+    %% Skeptic Agent
+    SkepticAgent["Skeptic Agent"]:::agentClass
+    SkepticOutput{"<b>Vulnerability Validated</b><br>
+Type: reentrancy<br>
+Confidence: 0.92<br>
+Highly exploitable<br>
+Could drain all funds"}:::vulnerabilityClass
+
+    %% Exploiter Agent
+    ExploiterAgent["Exploiter Agent"]:::agentClass
+    ExploitPlan{"<b>Exploit Plan</b><br>
+<u>Setup:</u> Deploy contracts, fund with ETH<br>
+<u>Execution:</u> Call withdraw recursively<br>
+<u>Validation:</u> Check attacker gained funds"}:::outputClass
+
+    %% Generator Agent
+    GeneratorAgent["Generator Agent"]:::agentClass
+    PoCCode["<pre>contract AttackerContract {
+    function attack() external {
+        vulnerableLending.withdraw(amount);
+    }
+    
+    receive() external payable {
+        if (contract has funds) {
+            vulnerableLending.withdraw(amount);
+        }
+    }
+}</pre>"]:::codeClass
+
+    %% Runner Agent
+    RunnerAgent["Runner Agent"]:::agentClass
+    RunnerOutput{"<b>Execution Result</b><br>
+[PASS] testExploit()<br>
+Initial balance: 10 ETH<br>
+Final balance: 0 ETH<br>
+Attack extracted all funds"}:::outputClass
+
+    %% Final Report
+    VulnerabilityReport["<b>Vulnerability Report</b><br>
+- Type: Reentrancy<br>
+- Confidence: 0.92<br>
+- Working PoC: Yes<br>
+- Recommendation: Update state before external calls"]:::outputClass
+
+    %% Flow
+    InputContract --> StaticAnalysis
+    StaticAnalysis --> SlitherOutput
+    SlitherOutput --> AnalyzerAgent
+    
+    subgraph "Retrieval Augmented Generation"
+        KnowledgeBase[(Known Vulnerability<br>Examples DB)]:::outputClass
+        RetrievalSystem["Retrieval System"]:::analysisClass
+        RelevantExamples{"Similar Reentrancy<br>Patterns"}:::outputClass
+        
+        KnowledgeBase --> RetrievalSystem
+        RetrievalSystem --> RelevantExamples
+        RelevantExamples --> AnalyzerAgent
+    end
+    
+    AnalyzerAgent --> AnalyzerOutput
+    AnalyzerOutput --> SkepticAgent
+    SkepticAgent --> SkepticOutput
+    
+    subgraph "High Confidence Vulnerabilities (>0.5)"
+        SkepticOutput --> ExploiterAgent
+        ExploiterAgent --> ExploitPlan
+        ExploitPlan --> GeneratorAgent
+        GeneratorAgent --> PoCCode
+        PoCCode --> RunnerAgent
+        RunnerAgent --> RunnerOutput
+    end
+    
+    RunnerOutput --> VulnerabilityReport
+
+    %% Subgraph Styling
+    style "High Confidence Vulnerabilities (>0.5)" fill:#fffde7,stroke:#ffd600
+    style "Retrieval Augmented Generation" fill:#e3f2fd,stroke:#1976d2

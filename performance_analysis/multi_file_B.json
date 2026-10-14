@@ -1,0 +1,73 @@
+{
+  "run_info": {
+    "timestamp": "2025-03-24_11-34-44",
+    "config": {
+      "analyzer_model": "claude-3-7-sonnet-latest",
+      "skeptic_model": "o3-mini",
+      "exploiter_model": "o3-mini",
+      "generator_model": "o3-mini",
+      "context_model": "o3-mini",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 110.73081994056702
+  },
+  "token_usage": {
+    "by_agent": {
+      "project_context": {
+        "prompt_tokens": 981,
+        "completion_tokens": 1345,
+        "total_tokens": 2326,
+        "call_count": 1
+      },
+      "analyzer": {
+        "prompt_tokens": 15302,
+        "completion_tokens": 2320,
+        "total_tokens": 17622,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 66014,
+        "completion_tokens": 2026,
+        "total_tokens": 68040,
+        "call_count": 1
+      }
+    },
+    "by_model": {
+      "claude-3-7-sonnet-latest": {
+        "prompt_tokens": 16283,
+        "completion_tokens": 3665,
+        "total_tokens": 19948,
+        "call_count": 2
+      },
+      "o3-mini": {
+        "prompt_tokens": 66014,
+        "completion_tokens": 2026,
+        "total_tokens": 68040,
+        "call_count": 1
+      }
+    },
+    "total": {
+      "prompt_tokens": 82297,
+      "completion_tokens": 5691,
+      "total_tokens": 87988,
+      "call_count": 3
+    }
+  },
+  "code_metrics": {
+    "total_lines": 1177,
+    "file_count": 10
+  },
+  "time_metrics": {
+    "total_seconds": 110.73081994056702,
+    "stage_times": {
+      "initialization": 0.0006630420684814453,
+      "static_analysis": 110.73011875152588
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 794.6116541648129
+  }
+}

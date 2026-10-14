@@ -1,0 +1,70 @@
+{
+  "run_info": {
+    "timestamp": "2026-07-20_12-55-28",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 51.74748730659485
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 2653,
+        "completion_tokens": 813,
+        "total_tokens": 3466,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 879,
+        "completion_tokens": 522,
+        "total_tokens": 1401,
+        "call_count": 1
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 3532,
+        "completion_tokens": 1335,
+        "total_tokens": 4867,
+        "call_count": 2
+      }
+    },
+    "total": {
+      "prompt_tokens": 3532,
+      "completion_tokens": 1335,
+      "total_tokens": 4867,
+      "call_count": 2
+    }
+  },
+  "code_metrics": {
+    "total_lines": 50,
+    "file_count": 1,
+    "files": [
+      "VulnerableBank.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 51.74748730659485,
+    "stage_times": {
+      "initialization": 0.005349397659301758,
+      "static_analysis": 0.3108797073364258,
+      "llm_analysis": 1.6313283443450928,
+      "analyzer_agent": 31.16396450996399,
+      "skeptic_agent": 18.631121397018433,
+      "results_reporting": 0.0021524429321289062,
+      "export": 0.001033782958984375
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 94.05287586552508,
+    "tokens_per_loc": 97.34
+  }
+}

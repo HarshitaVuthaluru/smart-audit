@@ -1,0 +1,67 @@
+{
+  "run_info": {
+    "timestamp": "2026-08-06_23-53-34",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 48.591713428497314
+  },
+  "token_usage": {
+    "by_agent": {
+      "project_context": {
+        "prompt_tokens": 594,
+        "completion_tokens": 224,
+        "total_tokens": 818,
+        "call_count": 1
+      },
+      "analyzer": {
+        "prompt_tokens": 2392,
+        "completion_tokens": 359,
+        "total_tokens": 2751,
+        "call_count": 1
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 2986,
+        "completion_tokens": 583,
+        "total_tokens": 3569,
+        "call_count": 2
+      }
+    },
+    "total": {
+      "prompt_tokens": 2986,
+      "completion_tokens": 583,
+      "total_tokens": 3569,
+      "call_count": 2
+    }
+  },
+  "code_metrics": {
+    "total_lines": 14,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\df78f697-7313-4b26-8b29-7039fed39526_RewardPool.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 48.591713428497314,
+    "stage_times": {
+      "initialization": 0.0010039806365966797,
+      "static_analysis": 7.753220319747925,
+      "project_context_agent": 18.062530755996704,
+      "analyzer_agent": 22.768028736114502
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 73.4487374118178,
+    "tokens_per_loc": 254.92857142857142
+  }
+}

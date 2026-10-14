@@ -1,0 +1,142 @@
+/* ============================================================
+   AnimatedGearBackground.css
+   High-detail cyber-mechanical gear background overlay.
+   Always behind content with pointer-events: none.
+   ============================================================ */
+
+.gear-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Outer gear wrapper - handles JS transform rotation */
+.gear-wrap {
+  position: absolute;
+  will-change: transform;
+}
+
+/* Inner container - handles CSS pulsing glow animation independently from JS rotation */
+.gear-glow-container {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── Gear 1 – Left, Orange/Gold ─────────────────────────── */
+.gear-wrap--left {
+  left: -14vw;
+  top: 16vh;
+  width: clamp(300px, 40vw, 600px);
+  height: clamp(300px, 40vw, 600px);
+  opacity: 0.32; /* Target: body 20-30%, illuminated edges 35-45% */
+}
+
+.gear-wrap--left .gear-glow-container {
+  filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5)) drop-shadow(0 0 3px rgba(245, 158, 11, 0.8));
+  animation: gearPulseLeft 5.5s ease-in-out infinite;
+}
+
+/* ── Gear 2 – Right, Teal/Cyan ──────────────────────────── */
+.gear-wrap--right {
+  right: -12vw;
+  top: 8vh;
+  width: clamp(240px, 32vw, 480px);
+  height: clamp(240px, 32vw, 480px);
+  opacity: 0.30;
+}
+
+.gear-wrap--right .gear-glow-container {
+  filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.5)) drop-shadow(0 0 3px rgba(6, 182, 180, 0.8));
+  animation: gearPulseRight 6.8s ease-in-out 1.4s infinite;
+}
+
+/* ── Gear 3 – Bottom-Left, Purple ───────────────────────── */
+.gear-wrap--bottomleft {
+  left: -10vw;
+  bottom: 2vh;
+  width: clamp(180px, 24vw, 360px);
+  height: clamp(180px, 24vw, 360px);
+  opacity: 0.28;
+}
+
+.gear-wrap--bottomleft .gear-glow-container {
+  filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.5)) drop-shadow(0 0 3px rgba(139, 92, 246, 0.8));
+  animation: gearPulseBottom 4.9s ease-in-out 0.7s infinite;
+}
+
+/* SVG fills the container */
+.gear-wrap svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── Glow Pulse Keyframe Animations (intensity fluctuation only) ── */
+@keyframes gearPulseLeft {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.4)) drop-shadow(0 0 2px rgba(245, 158, 11, 0.7));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.85)) drop-shadow(0 0 5px rgba(245, 158, 11, 1));
+  }
+}
+
+@keyframes gearPulseRight {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.4)) drop-shadow(0 0 2px rgba(6, 182, 180, 0.7));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.85)) drop-shadow(0 0 5px rgba(6, 182, 180, 1));
+  }
+}
+
+@keyframes gearPulseBottom {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.4)) drop-shadow(0 0 2px rgba(139, 92, 246, 0.7));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.85)) drop-shadow(0 0 5px rgba(139, 92, 246, 1));
+  }
+}
+
+/* ── Tablet (≤ 900 px) ──────────────────────────────────── */
+@media (max-width: 900px) {
+  .gear-wrap--left     { left: -18vw; opacity: 0.25; }
+  .gear-wrap--right    { right: -16vw; opacity: 0.23; }
+  .gear-wrap--bottomleft { left: -14vw; opacity: 0.22; }
+}
+
+/* ── Mobile (≤ 600 px) ──────────────────────────────────── */
+@media (max-width: 600px) {
+  .gear-wrap--left {
+    left: -22vw;
+    top: 12vh;
+    opacity: 0.18;
+    width: clamp(180px, 55vw, 280px);
+    height: clamp(180px, 55vw, 280px);
+  }
+  .gear-wrap--right {
+    right: -20vw;
+    top: 6vh;
+    opacity: 0.16;
+    width: clamp(150px, 45vw, 230px);
+    height: clamp(150px, 45vw, 230px);
+  }
+  .gear-wrap--bottomleft {
+    left: -18vw;
+    bottom: 2vh;
+    opacity: 0.16;
+    width: clamp(110px, 35vw, 190px);
+    height: clamp(110px, 35vw, 190px);
+  }
+}
+
+/* ── Reduced motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .gear-bg {
+    display: none;
+  }
+}

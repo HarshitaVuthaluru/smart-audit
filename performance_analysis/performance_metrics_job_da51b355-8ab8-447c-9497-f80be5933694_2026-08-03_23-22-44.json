@@ -1,0 +1,77 @@
+{
+  "run_info": {
+    "timestamp": "2026-08-03_23-12-25",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 619.6142160892487
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 1519,
+        "completion_tokens": 426,
+        "total_tokens": 1945,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 806,
+        "completion_tokens": 439,
+        "total_tokens": 1245,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 2050,
+        "completion_tokens": 750,
+        "total_tokens": 2800,
+        "call_count": 4
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 4375,
+        "completion_tokens": 1615,
+        "total_tokens": 5990,
+        "call_count": 6
+      }
+    },
+    "total": {
+      "prompt_tokens": 4375,
+      "completion_tokens": 1615,
+      "total_tokens": 5990,
+      "call_count": 6
+    }
+  },
+  "code_metrics": {
+    "total_lines": 14,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\da51b355-8ab8-447c-9497-f80be5933694_OwnershipBug.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 619.6142160892487,
+    "stage_times": {
+      "initialization": 0.0010013580322265625,
+      "static_analysis": 8.25456166267395,
+      "analyzer_agent": 138.8836166858673,
+      "skeptic_agent": 130.82304787635803,
+      "exploiter_agent": 51.040454149246216,
+      "generator_agent": 184.8389892578125,
+      "exploit_runner": 105.7668879032135,
+      "results_reporting": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 9.667305630600971,
+    "tokens_per_loc": 427.85714285714283
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "rechecked_vulnerabilities": [
+    {
+      "vulnerability_type": "access_control",
+      "confidence_score": 0.9,
+      "reasoning": "Deterministic source evidence: An externally callable entitlement-allocation function increases caller-controlled reward or credit state without authorization.",
+      "affected_functions": [
+        "addReward(uint256)"
+      ],
+      "impact": "High",
+      "severity": "High",
+      "remediation": "Restrict entitlement allocation to an authorized role or validate the allocation against an approved source.",
+      "exploitation_scenario": "Any account can invoke the affected externally callable function.",
+      "code_snippet": "function addReward(uint256 amount) external {\r\n        reward[msg.sender] += amount;\r\n    }",
+      "skeptic_confidence": 0.9,
+      "validity_reasoning": "Skeptic JSON could not be parsed; retained Analyzer finding.",
+      "skeptic_status": "fallback_parse_failure"
+    }
+  ],
+  "generated_pocs": [
+    {
+      "vulnerability": {
+        "vulnerability_type": "access_control",
+        "confidence_score": 0.9,
+        "reasoning": "Deterministic source evidence: An externally callable entitlement-allocation function increases caller-controlled reward or credit state without authorization.",
+        "affected_functions": [
+          "addReward(uint256)"
+        ],
+        "impact": "High",
+        "severity": "High",
+        "remediation": "Restrict entitlement allocation to an authorized role or validate the allocation against an approved source.",
+        "exploitation_scenario": "Any account can invoke the affected externally callable function.",
+        "code_snippet": "function addReward(uint256 amount) external {\r\n        reward[msg.sender] += amount;\r\n    }",
+        "skeptic_confidence": 0.9,
+        "validity_reasoning": "Skeptic JSON could not be parsed; retained Analyzer finding.",
+        "skeptic_status": "fallback_parse_failure"
+      },
+      "exploit_plan": {
+        "setup_steps": [],
+        "execution_steps": [],
+        "validation_steps": []
+      }
+    }
+  ],
+  "poc_metrics": {
+    "generated_pocs": 0,
+    "compiled_pocs": 0,
+    "executed_pocs": 0,
+    "successful_exploits": 0,
+    "compilation_failures": 0,
+    "execution_failures": 0,
+    "repair_attempts": 0,
+    "average_compile_time": 0.0,
+    "average_execution_time": 0.0
+  },
+  "token_usage": null
+}

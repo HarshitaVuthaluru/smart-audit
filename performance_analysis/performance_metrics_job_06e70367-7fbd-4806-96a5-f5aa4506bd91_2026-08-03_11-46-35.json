@@ -1,0 +1,77 @@
+{
+  "run_info": {
+    "timestamp": "2026-08-03_11-45-35",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 60.284202098846436
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 1796,
+        "completion_tokens": 233,
+        "total_tokens": 2029,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 540,
+        "completion_tokens": 133,
+        "total_tokens": 673,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 531,
+        "completion_tokens": 196,
+        "total_tokens": 727,
+        "call_count": 1
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 2867,
+        "completion_tokens": 562,
+        "total_tokens": 3429,
+        "call_count": 3
+      }
+    },
+    "total": {
+      "prompt_tokens": 2867,
+      "completion_tokens": 562,
+      "total_tokens": 3429,
+      "call_count": 3
+    }
+  },
+  "code_metrics": {
+    "total_lines": 15,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\06e70367-7fbd-4806-96a5-f5aa4506bd91_Lottery.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 60.284202098846436,
+    "stage_times": {
+      "initialization": 0.0009999275207519531,
+      "static_analysis": 9.7278151512146,
+      "analyzer_agent": 19.833251237869263,
+      "skeptic_agent": 8.34565806388855,
+      "exploiter_agent": 10.758056402206421,
+      "generator_agent": 7.2127275466918945,
+      "exploit_runner": 4.4036476612091064,
+      "results_reporting": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 56.88057369288156,
+    "tokens_per_loc": 228.6
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "success": true,
+  "results": {
+    "detectors": [
+      {
+        "check": "reentrancy-eth",
+        "impact": "High",
+        "confidence": "Medium",
+        "description": "Reentrancy in VulnerableLendingContract.withdraw(uint256) (VulnerableLendingContract.sol#13-20):\n\tExternal calls:\n\t- (success) = msg.sender.call{value: amount}(\"\") (VulnerableLendingContract.sol#17)\n\tState variables written after the call:\n\t- balances[msg.sender] -= amount (VulnerableLendingContract.sol#19)",
+        "elements": [
+          {
+            "type": "function",
+            "name": "withdraw",
+            "source_mapping": {
+              "start": 302,
+              "length": 336,
+              "filename": "VulnerableLendingContract.sol",
+              "lines": [13, 14, 15, 16, 17, 18, 19, 20]
+            },
+            "contract": {
+              "type": "contract",
+              "name": "VulnerableLendingContract",
+              "source_mapping": {
+                "start": 84,
+                "length": 701,
+                "filename": "VulnerableLendingContract.sol",
+                "lines": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+              }
+            }
+          },
+          {
+            "type": "expression",
+            "expression": "(success) = msg.sender.call{value: amount}(\"\")",
+            "source_mapping": {
+              "start": 471,
+              "length": 49,
+              "filename": "VulnerableLendingContract.sol",
+              "lines": [17]
+            }
+          },
+          {
+            "type": "expression",
+            "expression": "balances[msg.sender] -= amount",
+            "source_mapping": {
+              "start": 561,
+              "length": 31,
+              "filename": "VulnerableLendingContract.sol",
+              "lines": [19]
+            }
+          }
+        ]
+      },
+      {
+        "check": "arbitrary-send-eth",
+        "impact": "High",
+        "confidence": "Medium",
+        "description": "VulnerableLendingContract.withdraw(uint256) (VulnerableLendingContract.sol#13-20) sends eth to arbitrary user\n\tDangerous calls:\n\t- (success) = msg.sender.call{value: amount}(\"\") (VulnerableLendingContract.sol#17)",
+        "elements": [
+          {
+            "type": "function",
+            "name": "withdraw",
+            "source_mapping": {
+              "start": 302,
+              "length": 336,
+              "filename": "VulnerableLendingContract.sol",
+              "lines": [13, 14, 15, 16, 17, 18, 19, 20]
+            },
+            "contract": {
+              "type": "contract",
+              "name": "VulnerableLendingContract",
+              "source_mapping": {
+                "start": 84,
+                "length": 701,
+                "filename": "VulnerableLendingContract.sol",
+                "lines": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+              }
+            }
+          },
+          {
+            "type": "expression",
+            "expression": "(success) = msg.sender.call{value: amount}(\"\")",
+            "source_mapping": {
+              "start": 471,
+              "length": 49,
+              "filename": "VulnerableLendingContract.sol",
+              "lines": [17]
+            }
+          }
+        ]
+      },
+      {
+        "check": "missing-access-control",
+        "impact": "Medium",
+        "confidence": "High",
+        "description": "PriceOracle.updatePrice(address,uint256) (PriceOracle.sol#34-37) does not implement any access control",
+        "elements": [
+          {
+            "type": "function",
+            "name": "updatePrice",
+            "source_mapping": {
+              "start": 1046,
+              "length": 121,
+              "filename": "PriceOracle.sol",
+              "lines": [34, 35, 36, 37]
+            },
+            "contract": {
+              "type": "contract",
+              "name": "PriceOracle",
+              "source_mapping": {
+                "start": 109,
+                "length": 1184,
+                "filename": "PriceOracle.sol",
+                "lines": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "check": "missing-access-control",
+        "impact": "Medium",
+        "confidence": "High",
+        "description": "PriceOracle.setTokenPair(address,address) (PriceOracle.sol#39-42) does not implement any access control",
+        "elements": [
+          {
+            "type": "function",
+            "name": "setTokenPair",
+            "source_mapping": {
+              "start": 1169,
+              "length": 122,
+              "filename": "PriceOracle.sol",
+              "lines": [39, 40, 41, 42]
+            },
+            "contract": {
+              "type": "contract",
+              "name": "PriceOracle",
+              "source_mapping": {
+                "start": 109,
+                "length": 1184,
+                "filename": "PriceOracle.sol",
+                "lines": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "check": "unchecked-transfer",
+        "impact": "Medium",
+        "confidence": "Medium",
+        "description": "LendingPool.borrow(address,uint256) (LendingPool.sol#67-77) ignores return value by Token(token).transfer(msg.sender,amount) (LendingPool.sol#74)",
+        "elements": [
+          {
+            "type": "function",
+            "name": "borrow",
+            "source_mapping": {
+              "start": 2095,
+              "length": 452,
+              "filename": "LendingPool.sol",
+              "lines": [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77]
+            },
+            "contract": {
+              "type": "contract",
+              "name": "LendingPool",
+              "source_mapping": {
+                "start": 109,
+                "length": 2801,
+                "filename": "LendingPool.sol",
+                "lines": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94]
+              }
+            }
+          },
+          {
+            "type": "expression",
+            "expression": "Token(token).transfer(msg.sender,amount)",
+            "source_mapping": {
+              "start": 2413,
+              "length": 42,
+              "filename": "LendingPool.sol",
+              "lines": [74]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

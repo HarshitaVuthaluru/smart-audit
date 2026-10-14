@@ -1,0 +1,85 @@
+{
+  "run_info": {
+    "timestamp": "2026-07-19_01-30-30",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": false,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 142.91289830207825
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 1856,
+        "completion_tokens": 602,
+        "total_tokens": 2458,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 701,
+        "completion_tokens": 105,
+        "total_tokens": 806,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 476,
+        "completion_tokens": 156,
+        "total_tokens": 632,
+        "call_count": 1
+      },
+      "generator": {
+        "prompt_tokens": 538,
+        "completion_tokens": 352,
+        "total_tokens": 890,
+        "call_count": 1
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 3571,
+        "completion_tokens": 1215,
+        "total_tokens": 4786,
+        "call_count": 4
+      }
+    },
+    "total": {
+      "prompt_tokens": 3571,
+      "completion_tokens": 1215,
+      "total_tokens": 4786,
+      "call_count": 4
+    }
+  },
+  "code_metrics": {
+    "total_lines": 22,
+    "file_count": 1,
+    "files": [
+      "examples/VulnerableLendingContract.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 142.91289830207825,
+    "stage_times": {
+      "initialization": 0.0040013790130615234,
+      "static_analysis": 0.22806429862976074,
+      "llm_analysis": 1.174286127090454,
+      "analyzer_agent": 49.107383728027344,
+      "skeptic_agent": 24.352575302124023,
+      "exploiter_agent": 7.222857475280762,
+      "generator_agent": 21.737157583236694,
+      "exploit_runner": 39.08157467842102,
+      "results_reporting": 0.002999544143676758,
+      "export": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 33.48892966878135,
+    "tokens_per_loc": 217.54545454545453
+  }
+}

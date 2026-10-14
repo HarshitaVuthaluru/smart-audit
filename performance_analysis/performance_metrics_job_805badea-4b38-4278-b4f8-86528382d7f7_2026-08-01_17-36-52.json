@@ -1,0 +1,77 @@
+{
+  "run_info": {
+    "timestamp": "2026-08-01_17-27-37",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 555.5857446193695
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 3570,
+        "completion_tokens": 690,
+        "total_tokens": 4260,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 1621,
+        "completion_tokens": 784,
+        "total_tokens": 2405,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 3779,
+        "completion_tokens": 1392,
+        "total_tokens": 5171,
+        "call_count": 7
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 8970,
+        "completion_tokens": 2866,
+        "total_tokens": 11836,
+        "call_count": 9
+      }
+    },
+    "total": {
+      "prompt_tokens": 8970,
+      "completion_tokens": 2866,
+      "total_tokens": 11836,
+      "call_count": 9
+    }
+  },
+  "code_metrics": {
+    "total_lines": 45,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\805badea-4b38-4278-b4f8-86528382d7f7_VulnerableBank.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 555.5857446193695,
+    "stage_times": {
+      "initialization": 0.0010001659393310547,
+      "static_analysis": 9.402880430221558,
+      "analyzer_agent": 80.64862561225891,
+      "skeptic_agent": 31.072282791137695,
+      "exploiter_agent": 77.71458625793457,
+      "generator_agent": 356.7364270687103,
+      "exploit_runner": 0.0010399818420410156,
+      "results_reporting": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 21.303642353366744,
+    "tokens_per_loc": 263.02222222222224
+  }
+}

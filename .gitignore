@@ -1,0 +1,91 @@
+# ===========================
+# Virtual Environment
+# ===========================
+.venv/
+
+# ===========================
+# Environment Variables
+# ===========================
+.env
+
+# ===========================
+# Python
+# ===========================
+__pycache__/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+
+# ===========================
+# Node.js
+# ===========================
+node_modules/
+
+# ===========================
+# VS Code
+# ===========================
+.vscode/
+
+# ===========================
+# Temporary Files
+# ===========================
+*.tmp
+*.temp
+
+# ===========================
+# OS Files
+# ===========================
+.DS_Store
+Thumbs.db
+
+# ===========================
+# Build Outputs
+# ===========================
+build/
+dist/
+
+# ===========================
+# ChromaDB
+# ===========================
+chroma_db/
+*.db
+*.sqlite3
+
+# ===========================
+# Uploads
+# ===========================
+frontend_poc/uploads/
+
+# ===========================
+# Static Analysis Test Contracts
+# ===========================
+static_analysis/test_contracts/
+
+# ===========================
+# Foundry
+# ===========================
+exploit/cache/
+exploit/out/
+exploit/src/test/
+
+# ===========================
+# Logs
+# ===========================
+*.log
+benchmark_evaluation.log
+ctfbench_evaluation.log
+
+# ===========================
+# Reports
+# ===========================
+reports/*
+!reports/.gitkeep
+# ===========================
+# Miscellaneous
+# ===========================
+repomix-output.txt
+
+# Uncomment if you don't want benchmark datasets tracked
+# benchmark_data/
+# benchmark_data_no_errors/

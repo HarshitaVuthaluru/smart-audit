@@ -1,0 +1,77 @@
+{
+  "run_info": {
+    "timestamp": "2026-08-03_11-01-21",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 52.77696132659912
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 2418,
+        "completion_tokens": 10,
+        "total_tokens": 2428,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 540,
+        "completion_tokens": 172,
+        "total_tokens": 712,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 532,
+        "completion_tokens": 192,
+        "total_tokens": 724,
+        "call_count": 1
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 3490,
+        "completion_tokens": 374,
+        "total_tokens": 3864,
+        "call_count": 3
+      }
+    },
+    "total": {
+      "prompt_tokens": 3490,
+      "completion_tokens": 374,
+      "total_tokens": 3864,
+      "call_count": 3
+    }
+  },
+  "code_metrics": {
+    "total_lines": 15,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\b37a5567-4c0e-4323-b705-44bd0e529b62_Lottery.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 52.77696132659912,
+    "stage_times": {
+      "initialization": 0.0009953975677490234,
+      "static_analysis": 8.951214075088501,
+      "analyzer_agent": 11.108691453933716,
+      "skeptic_agent": 10.45718789100647,
+      "exploiter_agent": 11.255602598190308,
+      "generator_agent": 6.592599153518677,
+      "exploit_runner": 4.399116039276123,
+      "results_reporting": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 73.21376416668723,
+    "tokens_per_loc": 257.6
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "rechecked_vulnerabilities": [
+    {
+      "vulnerability_type": "REENTRANCY",
+      "confidence_score": 0.95,
+      "reasoning": "The withdrawFunds function calls msg.sender.call.value(_weiToWithdraw)() which can be exploited by a malicious contract to re-enter before the function completes, leading to unauthorized withdrawal of funds.",
+      "affected_functions": [
+        "withdrawFunds(uint256)"
+      ],
+      "impact": "Users can lose all their deposited ETH due to repeated withdrawal attempts by an attacker.",
+      "exploitation_scenario": [
+        "An attacker deposits funds into the EtherStore contract.",
+        "The attacker sends a transaction to execute multiple withdrawFunds calls in quick succession.",
+        "During the first call, msg.sender.call.value(_weiToWithdraw)() is executed and the attacker's contract re-enters the withdrawFunds function.",
+        "Re-entry allows the attacker to execute additional calls to withdraw before the initial withdrawal completes.",
+        "The balance of the user is reduced by the sum of all calls, leaving them with no funds."
+      ],
+      "code_snippet": "function withdrawFunds (uint256 _weiToWithdraw) public {\n        require(balances[msg.sender] >= _weiToWithdraw);\n        // limit the withdrawal\n        require(_weiToWithdraw <= withdrawalLimit);\n        // limit the time allowed to withdraw\n        require(now >= lastWithdrawTime[msg.sender] + 1 weeks);\n        // <yes> <report> REENTRANCY\n        require(msg.sender.call.value(_weiToWithdraw)());\n        balances[msg.sender] -= _weiToWithdraw;\n        lastWithdrawTime[msg.sender] = now;\n    }",
+      "skeptic_confidence": 0.95,
+      "validity_reasoning": "Source execution order shows an external interaction before a state update; this violates checks-effects-interactions and supports the reported reentrancy finding.",
+      "skeptic_evidence_lines": [
+        ".call.value(",
+        "balances[msg.sender] -="
+      ],
+      "skeptic_status": "VERIFIED",
+      "confirmed": true,
+      "evidence_source": "source_semantic_verification"
+    }
+  ],
+  "generated_pocs": [
+    {
+      "vulnerability": {
+        "vulnerability_type": "REENTRANCY",
+        "confidence_score": 0.95,
+        "reasoning": "The withdrawFunds function calls msg.sender.call.value(_weiToWithdraw)() which can be exploited by a malicious contract to re-enter before the function completes, leading to unauthorized withdrawal of funds.",
+        "affected_functions": [
+          "withdrawFunds(uint256)"
+        ],
+        "impact": "Users can lose all their deposited ETH due to repeated withdrawal attempts by an attacker.",
+        "exploitation_scenario": [
+          "An attacker deposits funds into the EtherStore contract.",
+          "The attacker sends a transaction to execute multiple withdrawFunds calls in quick succession.",
+          "During the first call, msg.sender.call.value(_weiToWithdraw)() is executed and the attacker's contract re-enters the withdrawFunds function.",
+          "Re-entry allows the attacker to execute additional calls to withdraw before the initial withdrawal completes.",
+          "The balance of the user is reduced by the sum of all calls, leaving them with no funds."
+        ],
+        "code_snippet": "function withdrawFunds (uint256 _weiToWithdraw) public {\n        require(balances[msg.sender] >= _weiToWithdraw);\n        // limit the withdrawal\n        require(_weiToWithdraw <= withdrawalLimit);\n        // limit the time allowed to withdraw\n        require(now >= lastWithdrawTime[msg.sender] + 1 weeks);\n        // <yes> <report> REENTRANCY\n        require(msg.sender.call.value(_weiToWithdraw)());\n        balances[msg.sender] -= _weiToWithdraw;\n        lastWithdrawTime[msg.sender] = now;\n    }",
+        "skeptic_confidence": 0.95,
+        "validity_reasoning": "Source execution order shows an external interaction before a state update; this violates checks-effects-interactions and supports the reported reentrancy finding.",
+        "skeptic_evidence_lines": [
+          ".call.value(",
+          "balances[msg.sender] -="
+        ],
+        "skeptic_status": "VERIFIED",
+        "confirmed": true,
+        "evidence_source": "source_semantic_verification"
+      },
+      "exploit_plan": {
+        "setup_steps": [
+          "Fund the target and deploy a re-entering receiver."
+        ],
+        "execution_steps": [
+          "Deposit through the receiver, then call withdraw to re-enter before the balance update."
+        ],
+        "validation_steps": [
+          "Assert that the receiver withdrew more than its original deposit."
+        ]
+      }
+    }
+  ],
+  "poc_metrics": {
+    "generated_pocs": 0,
+    "compiled_pocs": 0,
+    "executed_pocs": 0,
+    "successful_exploits": 0,
+    "compilation_failures": 0,
+    "execution_failures": 0,
+    "repair_attempts": 0,
+    "average_compile_time": 0.0,
+    "average_execution_time": 0.0
+  },
+  "token_usage": null
+}

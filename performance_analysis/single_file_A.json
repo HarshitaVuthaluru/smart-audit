@@ -1,0 +1,83 @@
+{
+  "run_info": {
+    "timestamp": "2025-03-24_11-39-19",
+    "config": {
+      "analyzer_model": "claude-3-7-sonnet-latest",
+      "skeptic_model": "o3-mini",
+      "exploiter_model": "o3-mini",
+      "generator_model": "o3-mini",
+      "context_model": "o3-mini",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 233.42432808876038
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 2980,
+        "completion_tokens": 1705,
+        "total_tokens": 4685,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 1143,
+        "completion_tokens": 2035,
+        "total_tokens": 3178,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 493,
+        "completion_tokens": 367,
+        "total_tokens": 860,
+        "call_count": 1
+      },
+      "generator": {
+        "prompt_tokens": 540,
+        "completion_tokens": 1373,
+        "total_tokens": 1913,
+        "call_count": 1
+      }
+    },
+    "by_model": {
+      "claude-3-7-sonnet-latest": {
+        "prompt_tokens": 2980,
+        "completion_tokens": 1705,
+        "total_tokens": 4685,
+        "call_count": 1
+      },
+      "o3-mini": {
+        "prompt_tokens": 2176,
+        "completion_tokens": 3775,
+        "total_tokens": 5951,
+        "call_count": 3
+      }
+    },
+    "total": {
+      "prompt_tokens": 5156,
+      "completion_tokens": 5480,
+      "total_tokens": 10636,
+      "call_count": 4
+    }
+  },
+  "code_metrics": {
+    "total_lines": 54,
+    "file_count": 1,
+    "files": [
+      "uploads/bba975db-15a5-4ccb-b13a-95de677dc410_Voting.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 233.42432808876038,
+    "stage_times": {
+      "initialization": 0.0007269382476806641,
+      "static_analysis": 233.4235291481018
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 45.56508778277655,
+    "tokens_per_loc": 196.96296296296296
+  }
+}

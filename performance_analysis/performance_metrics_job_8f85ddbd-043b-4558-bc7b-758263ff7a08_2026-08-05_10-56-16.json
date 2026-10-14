@@ -1,0 +1,46 @@
+{
+  "run_info": {
+    "timestamp": "2026-08-05_10-56-00",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 16.217179775238037
+  },
+  "token_usage": {
+    "by_agent": {},
+    "by_model": {},
+    "total": {
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0,
+      "call_count": 0
+    }
+  },
+  "code_metrics": {
+    "total_lines": 36,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\8f85ddbd-043b-4558-bc7b-758263ff7a08_Mixed.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 16.217179775238037,
+    "stage_times": {
+      "initialization": 0.0,
+      "static_analysis": 11.961613178253174,
+      "analyzer_agent": 4.242830991744995
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 0.0,
+    "tokens_per_loc": 0.0
+  }
+}

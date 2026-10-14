@@ -1,0 +1,77 @@
+{
+  "run_info": {
+    "timestamp": "2026-07-29_22-59-34",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 204.67062211036682
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 3826,
+        "completion_tokens": 1164,
+        "total_tokens": 4990,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 929,
+        "completion_tokens": 593,
+        "total_tokens": 1522,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 1511,
+        "completion_tokens": 478,
+        "total_tokens": 1989,
+        "call_count": 3
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 6266,
+        "completion_tokens": 2235,
+        "total_tokens": 8501,
+        "call_count": 5
+      }
+    },
+    "total": {
+      "prompt_tokens": 6266,
+      "completion_tokens": 2235,
+      "total_tokens": 8501,
+      "call_count": 5
+    }
+  },
+  "code_metrics": {
+    "total_lines": 45,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\e7297482-42df-47ef-86ae-2dbf098132b7_VulnerableBank.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 204.67062211036682,
+    "stage_times": {
+      "initialization": 0.0010035037994384766,
+      "static_analysis": 6.017406225204468,
+      "analyzer_agent": 45.1606330871582,
+      "skeptic_agent": 20.838017225265503,
+      "exploiter_agent": 22.270426273345947,
+      "generator_agent": 110.37514567375183,
+      "exploit_runner": 0.0,
+      "results_reporting": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 41.5350279016395,
+    "tokens_per_loc": 188.9111111111111
+  }
+}

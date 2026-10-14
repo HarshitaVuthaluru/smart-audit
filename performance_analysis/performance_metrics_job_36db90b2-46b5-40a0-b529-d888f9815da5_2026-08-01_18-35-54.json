@@ -1,0 +1,77 @@
+{
+  "run_info": {
+    "timestamp": "2026-08-01_18-31-05",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 288.81994223594666
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 3547,
+        "completion_tokens": 1050,
+        "total_tokens": 4597,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 1145,
+        "completion_tokens": 439,
+        "total_tokens": 1584,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 1597,
+        "completion_tokens": 570,
+        "total_tokens": 2167,
+        "call_count": 3
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 6289,
+        "completion_tokens": 2059,
+        "total_tokens": 8348,
+        "call_count": 5
+      }
+    },
+    "total": {
+      "prompt_tokens": 6289,
+      "completion_tokens": 2059,
+      "total_tokens": 8348,
+      "call_count": 5
+    }
+  },
+  "code_metrics": {
+    "total_lines": 45,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\36db90b2-46b5-40a0-b529-d888f9815da5_VulnerableBank.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 288.81994223594666,
+    "stage_times": {
+      "initialization": 0.00099945068359375,
+      "static_analysis": 8.949724674224854,
+      "analyzer_agent": 46.56323289871216,
+      "skeptic_agent": 18.247671604156494,
+      "exploiter_agent": 91.08611059188843,
+      "generator_agent": 123.9635283946991,
+      "exploit_runner": 0.001064300537109375,
+      "results_reporting": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 28.903821306010233,
+    "tokens_per_loc": 185.51111111111112
+  }
+}

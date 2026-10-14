@@ -1,0 +1,71 @@
+{
+  "rechecked_vulnerabilities": [
+    {
+      "vulnerability_type": "REENTRANCY",
+      "confidence_score": 0.95,
+      "reasoning": "The contract has a low-level call followed by state changes in the withdrawFunds function, which is a classic reentrancy pattern.",
+      "affected_functions": [
+        "withdrawFunds(uint256)"
+      ],
+      "impact": "An attacker can exploit this vulnerability to withdraw more funds than they are entitled to or cause the contract to become insolvent.",
+      "exploitation_scenario": "1. An attacker calls the withdrawFunds function with enough wei to steal.\n2. The contract sends the requested wei to the attacker using msg.sender.call.value(_weiToWithdraw)().\n3. Inside the attacker's fallback or receive function, it can call withdrawFunds again, which will succeed because the balances[msg.sender] check has already passed.",
+      "code_snippet": "function withdrawFunds (uint256 _weiToWithdraw) public {\n        require(balances[msg.sender] >= _weiToWithdraw);\n        // limit the withdrawal\n        require(_weiToWithdraw <= withdrawalLimit);\n        // limit the time allowed to withdraw\n        require(now >= lastWithdrawTime[msg.sender] + 1 weeks);\n        // <yes> <report> REENTRANCY\n        require(msg.sender.call.value(_weiToWithdraw)());\n        balances[msg.sender] -= _weiToWithdraw;\n        lastWithdrawTime[msg.sender] = now;\n    }",
+      "skeptic_confidence": 0.95,
+      "validity_reasoning": "Source execution order shows an external interaction before a state update; this violates checks-effects-interactions and supports the reported reentrancy finding.",
+      "skeptic_evidence_lines": [
+        ".call.value(",
+        "balances[msg.sender] -="
+      ],
+      "skeptic_status": "VERIFIED",
+      "confirmed": true,
+      "evidence_source": "source_semantic_verification"
+    }
+  ],
+  "generated_pocs": [
+    {
+      "vulnerability": {
+        "vulnerability_type": "REENTRANCY",
+        "confidence_score": 0.95,
+        "reasoning": "The contract has a low-level call followed by state changes in the withdrawFunds function, which is a classic reentrancy pattern.",
+        "affected_functions": [
+          "withdrawFunds(uint256)"
+        ],
+        "impact": "An attacker can exploit this vulnerability to withdraw more funds than they are entitled to or cause the contract to become insolvent.",
+        "exploitation_scenario": "1. An attacker calls the withdrawFunds function with enough wei to steal.\n2. The contract sends the requested wei to the attacker using msg.sender.call.value(_weiToWithdraw)().\n3. Inside the attacker's fallback or receive function, it can call withdrawFunds again, which will succeed because the balances[msg.sender] check has already passed.",
+        "code_snippet": "function withdrawFunds (uint256 _weiToWithdraw) public {\n        require(balances[msg.sender] >= _weiToWithdraw);\n        // limit the withdrawal\n        require(_weiToWithdraw <= withdrawalLimit);\n        // limit the time allowed to withdraw\n        require(now >= lastWithdrawTime[msg.sender] + 1 weeks);\n        // <yes> <report> REENTRANCY\n        require(msg.sender.call.value(_weiToWithdraw)());\n        balances[msg.sender] -= _weiToWithdraw;\n        lastWithdrawTime[msg.sender] = now;\n    }",
+        "skeptic_confidence": 0.95,
+        "validity_reasoning": "Source execution order shows an external interaction before a state update; this violates checks-effects-interactions and supports the reported reentrancy finding.",
+        "skeptic_evidence_lines": [
+          ".call.value(",
+          "balances[msg.sender] -="
+        ],
+        "skeptic_status": "VERIFIED",
+        "confirmed": true,
+        "evidence_source": "source_semantic_verification"
+      },
+      "exploit_plan": {
+        "setup_steps": [
+          "Fund the target and deploy a re-entering receiver."
+        ],
+        "execution_steps": [
+          "Deposit through the receiver, then call withdraw to re-enter before the balance update."
+        ],
+        "validation_steps": [
+          "Assert that the receiver withdrew more than its original deposit."
+        ]
+      }
+    }
+  ],
+  "poc_metrics": {
+    "generated_pocs": 0,
+    "compiled_pocs": 0,
+    "executed_pocs": 0,
+    "successful_exploits": 0,
+    "compilation_failures": 0,
+    "execution_failures": 0,
+    "repair_attempts": 0,
+    "average_compile_time": 0.0,
+    "average_execution_time": 0.0
+  },
+  "token_usage": null
+}

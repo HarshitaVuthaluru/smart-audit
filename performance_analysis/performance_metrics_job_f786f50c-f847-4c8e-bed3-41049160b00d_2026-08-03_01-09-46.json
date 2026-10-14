@@ -1,0 +1,77 @@
+{
+  "run_info": {
+    "timestamp": "2026-08-03_00-58-36",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 670.1251122951508
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 3412,
+        "completion_tokens": 715,
+        "total_tokens": 4127,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 1394,
+        "completion_tokens": 957,
+        "total_tokens": 2351,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 3137,
+        "completion_tokens": 1053,
+        "total_tokens": 4190,
+        "call_count": 6
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 7943,
+        "completion_tokens": 2725,
+        "total_tokens": 10668,
+        "call_count": 8
+      }
+    },
+    "total": {
+      "prompt_tokens": 7943,
+      "completion_tokens": 2725,
+      "total_tokens": 10668,
+      "call_count": 8
+    }
+  },
+  "code_metrics": {
+    "total_lines": 45,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\f786f50c-f847-4c8e-bed3-41049160b00d_VulnerableBank.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 670.1251122951508,
+    "stage_times": {
+      "initialization": 0.0009918212890625,
+      "static_analysis": 7.689486026763916,
+      "analyzer_agent": 37.00205659866333,
+      "skeptic_agent": 54.1982102394104,
+      "exploiter_agent": 91.97589039802551,
+      "generator_agent": 248.3472204208374,
+      "exploit_runner": 230.86899137496948,
+      "results_reporting": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 15.919415351355125,
+    "tokens_per_loc": 237.06666666666666
+  }
+}

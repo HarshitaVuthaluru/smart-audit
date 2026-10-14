@@ -1,0 +1,77 @@
+{
+  "run_info": {
+    "timestamp": "2026-08-02_23-37-48",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 321.10504961013794
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 3481,
+        "completion_tokens": 593,
+        "total_tokens": 4074,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 1295,
+        "completion_tokens": 696,
+        "total_tokens": 1991,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 2047,
+        "completion_tokens": 787,
+        "total_tokens": 2834,
+        "call_count": 4
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 6823,
+        "completion_tokens": 2076,
+        "total_tokens": 8899,
+        "call_count": 6
+      }
+    },
+    "total": {
+      "prompt_tokens": 6823,
+      "completion_tokens": 2076,
+      "total_tokens": 8899,
+      "call_count": 6
+    }
+  },
+  "code_metrics": {
+    "total_lines": 45,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\9920e6b6-593c-48d0-8dab-497c4eb792d1_VulnerableBank.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 321.10504961013794,
+    "stage_times": {
+      "initialization": 0.0,
+      "static_analysis": 8.444969892501831,
+      "analyzer_agent": 41.035717725753784,
+      "skeptic_agent": 33.42274212837219,
+      "exploiter_agent": 54.76159071922302,
+      "generator_agent": 50.40689015388489,
+      "exploit_runner": 133.01967597007751,
+      "results_reporting": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 27.71367193011916,
+    "tokens_per_loc": 197.75555555555556
+  }
+}

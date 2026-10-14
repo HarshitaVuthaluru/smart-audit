@@ -1,0 +1,467 @@
+{
+  "rechecked_vulnerabilities": [
+    {
+      "vulnerability_type": "ACCESS_CONTROL",
+      "confidence_score": 1.0,
+      "reasoning": "The contract allows the transfer of ownership to any address without any checks or conditions, which gives control to anyone who can call the `transferOwnership` function. Supporting evidence: Deterministic source evidence: An externally callable function changes privileged state without an authorization check.",
+      "affected_functions": [
+        "transferOwnership(address)"
+      ],
+      "impact": "The attacker can take over the contract and manipulate its state or withdraw funds.",
+      "exploitation_scenario": "An attacker calls `transferOwnership(newOwner)` with their address as the parameter. The contract immediately transfers ownership to the attacker, who can now perform any actions that require ownership.",
+      "code_snippet": "function transferOwnership(address newOwner) external {\r\n        owner = newOwner;\r\n    }",
+      "skeptic_confidence": 1.0,
+      "validity_reasoning": "Source shows an externally callable privileged capability without authorization.",
+      "skeptic_evidence_lines": [
+        "owner ="
+      ],
+      "skeptic_status": "VERIFIED",
+      "confirmed": true,
+      "evidence_source": "source_semantic_verification"
+    },
+    {
+      "vulnerability_type": "UNCHECKED_LOW_LEVEL_CALLS",
+      "confidence_score": 1.0,
+      "reasoning": "Both the `emergencyWithdraw` and `unsafeSend` functions perform unchecked low-level calls (`address(msg.sender).transfer`) without verifying the return value, making them vulnerable to failure.",
+      "affected_functions": [
+        "emergencyWithdraw()",
+        "unsafeSend(address,uint256)"
+      ],
+      "impact": "These functions could fail and leave funds untransferred or cause contract termination if the external call does not perform as expected.",
+      "exploitation_scenario": "An attacker causes a low-level call to fail (e.g., by sending nonETH transactions), leaving an unknown state in the vulnerable function.",
+      "code_snippet": "function emergencyWithdraw() external {\r\n        payable(msg.sender).transfer(address(this).balance);\r\n    }\n\nfunction unsafeSend(address payable to, uint256 amount) external {\r\n        to.call{value: amount}(\"\");\r\n    }",
+      "skeptic_confidence": 1.0,
+      "validity_reasoning": "Source performs a low-level call without checking its return value.",
+      "skeptic_evidence_lines": [
+        ".call{value: amount}("
+      ],
+      "skeptic_status": "VERIFIED",
+      "confirmed": true,
+      "evidence_source": "source_semantic_verification"
+    },
+    {
+      "vulnerability_type": "UNCHECKED_LOW_LEVEL_CALLS",
+      "confidence_score": 1.0,
+      "reasoning": "The `unsafeSend` function performs an unchecked low-level call to the target address without verifying the return value, making it vulnerable to failure. Supporting evidence: Deterministic source evidence: A low-level call return value is not checked in the affected function.",
+      "affected_functions": [
+        "unsafeSend(address,uint256)"
+      ],
+      "impact": "If the external call fails for any reason, the state change (`balances[msg.sender] -= amount`) will still be executed, potentially leading to unexpected behavior or loss of funds.",
+      "exploitation_scenario": "An attacker causes a low-level call to fail (e.g., by sending nonETH transactions), leaving an unknown state in the `unsafeSend` function.",
+      "code_snippet": "function unsafeSend(address payable to, uint256 amount) external {\r\n        to.call{value: amount}(\"\");\r\n    }",
+      "skeptic_confidence": 1.0,
+      "validity_reasoning": "Source performs a low-level call without checking its return value.",
+      "skeptic_evidence_lines": [
+        ".call{value: amount}("
+      ],
+      "skeptic_status": "VERIFIED",
+      "confirmed": true,
+      "evidence_source": "source_semantic_verification"
+    },
+    {
+      "vulnerability_type": "ACCESS_CONTROL",
+      "confidence_score": 1.0,
+      "reasoning": "The contract allows anyone to destroy it using the `destroy` function without any checks or conditions, removing its functionality and potentially leaving funds untransferred. Supporting evidence: Deterministic source evidence: An externally callable function reaches selfdestruct without an authorization check.",
+      "affected_functions": [
+        "destroy()"
+      ],
+      "impact": "Any address can cause the contraction to self-destruct, losing all funds held within it.",
+      "exploitation_scenario": "An attacker calls `destroy()` from an arbitrary address. The contract immediately begins destroying itself, losing all funds.",
+      "code_snippet": "function destroy() external {\r\n        selfdestruct(payable(msg.sender));\r\n    }",
+      "skeptic_confidence": 1.0,
+      "validity_reasoning": "Source shows an externally callable privileged capability without authorization.",
+      "skeptic_evidence_lines": [
+        "selfdestruct("
+      ],
+      "skeptic_status": "VERIFIED",
+      "confirmed": true,
+      "evidence_source": "source_semantic_verification"
+    },
+    {
+      "vulnerability_type": "REENTRANCY",
+      "confidence_score": 0.95,
+      "reasoning": "The `withdraw` function makes an external call (`msg.sender.call{value: amount}()`) followed by a state change (`balances[msg.sender] -= amount`). This is a classic pattern for reentrancy attacks. Supporting evidence: Deterministic source evidence found in withdraw(uint256).",
+      "affected_functions": [
+        "withdraw(uint256)"
+      ],
+      "impact": "The attacker can drain the contract by repeatedly calling `withdraw` inside their fallback function before the balance update is completed.",
+      "exploitation_scenario": "An attacker uses Reentrance contracts (https://github.com/npgh4d7/Reentrance/blob/master/DenialOfService-Flows/dos_reentry.sol) to continually call `withdraw` repeatedly, stealing all funds from the contract.",
+      "code_snippet": "function withdraw(uint256 amount) external {\r\n        require(balances[msg.sender] >= amount);\r\n\r\n        (bool success,) = msg.sender.call{value: amount}(\"\");\r\n\r\n        require(success);\r\n\r\n        balances[msg.sender] -= amount;\r\n    }",
+      "skeptic_confidence": 0.95,
+      "validity_reasoning": "Source execution order shows an external interaction before a state update; this violates checks-effects-interactions and supports the reported reentrancy finding.",
+      "skeptic_evidence_lines": [
+        ".call{value: amount}(",
+        "balances[msg.sender] -="
+      ],
+      "skeptic_status": "VERIFIED",
+      "confirmed": true,
+      "evidence_source": "source_semantic_verification"
+    },
+    {
+      "vulnerability_type": "access_control",
+      "confidence_score": 0.9,
+      "reasoning": "Deterministic source evidence: An externally callable emergency-style function transfers the contract's full balance without authorization.",
+      "affected_functions": [
+        "emergencyWithdraw()"
+      ],
+      "impact": "High",
+      "severity": "High",
+      "remediation": "Restrict emergency withdrawal of contract-held funds to an authorized role.",
+      "exploitation_scenario": "Any account can invoke the affected externally callable function.",
+      "code_snippet": "function emergencyWithdraw() external {\r\n        payable(msg.sender).transfer(address(this).balance);\r\n    }",
+      "skeptic_confidence": 0.9,
+      "validity_reasoning": "Source shows an externally callable privileged capability without authorization.",
+      "skeptic_evidence_lines": [
+        "address(this).balance"
+      ],
+      "skeptic_status": "VERIFIED",
+      "confirmed": true,
+      "evidence_source": "source_semantic_verification"
+    },
+    {
+      "vulnerability_type": "access_control",
+      "confidence_score": 0.9,
+      "reasoning": "Deterministic source evidence: An externally callable administrative setter assigns another user's financial balance without authorization.",
+      "affected_functions": [
+        "setBalance(address,uint256)"
+      ],
+      "impact": "High",
+      "severity": "High",
+      "remediation": "Restrict balance administration to an authorized role and validate the update authority.",
+      "exploitation_scenario": "Any account can invoke the affected externally callable function.",
+      "code_snippet": "function setBalance(address user, uint256 amount) external {\r\n        balances[user] = amount;\r\n    }",
+      "skeptic_confidence": 0.9,
+      "validity_reasoning": "Source shows an externally callable privileged capability without authorization.",
+      "skeptic_evidence_lines": [
+        "balances[user] ="
+      ],
+      "skeptic_status": "VERIFIED",
+      "confirmed": true,
+      "evidence_source": "source_semantic_verification"
+    },
+    {
+      "vulnerability_type": "bad_randomness",
+      "confidence_score": 0.69,
+      "reasoning": "Deterministic source evidence found in random().",
+      "affected_functions": [
+        "random()"
+      ],
+      "impact": "High",
+      "severity": "High",
+      "remediation": "Use a verifiable randomness source instead of miner-influenced block values.",
+      "exploitation_scenario": "Confirmed by function-scoped deterministic source analysis.",
+      "code_snippet": "function random() external view returns (uint256) {\r\n        return uint256(\r\n            keccak256(\r\n                abi.encodePacked(\r\n                    block.timestamp,\r\n                    block.prevrandao,\r\n                    msg.sender\r\n                )\r\n            )\r\n        );\r\n    }",
+      "skeptic_confidence": 0.69,
+      "validity_reasoning": "Deterministic source evidence found in `random()` but the function generates a pseudo-random number, which is not problematic for most use cases where randomness is needed (e.g., lotteries). The analyzer's reasoning might be too broad here.",
+      "skeptic_evidence_lines": [
+        "function random() external view returns (uint256) { return uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, msg.sender))); }"
+      ],
+      "skeptic_status": "NEEDS_REVIEW",
+      "confirmed": false,
+      "evidence_source": "skeptic",
+      "confidence_level": "Likely"
+    }
+  ],
+  "generated_pocs": [
+    {
+      "vulnerability": {
+        "vulnerability_type": "ACCESS_CONTROL",
+        "confidence_score": 1.0,
+        "reasoning": "The contract allows the transfer of ownership to any address without any checks or conditions, which gives control to anyone who can call the `transferOwnership` function. Supporting evidence: Deterministic source evidence: An externally callable function changes privileged state without an authorization check.",
+        "affected_functions": [
+          "transferOwnership(address)"
+        ],
+        "impact": "The attacker can take over the contract and manipulate its state or withdraw funds.",
+        "exploitation_scenario": "An attacker calls `transferOwnership(newOwner)` with their address as the parameter. The contract immediately transfers ownership to the attacker, who can now perform any actions that require ownership.",
+        "code_snippet": "function transferOwnership(address newOwner) external {\r\n        owner = newOwner;\r\n    }",
+        "skeptic_confidence": 1.0,
+        "validity_reasoning": "Source shows an externally callable privileged capability without authorization.",
+        "skeptic_evidence_lines": [
+          "owner ="
+        ],
+        "skeptic_status": "VERIFIED",
+        "confirmed": true,
+        "evidence_source": "source_semantic_verification"
+      },
+      "exploit_plan": {
+        "setup_steps": [
+          "Step 1: Create a simple smart contract with the vulnerable `transferOwnership` function",
+          "Step 2: Set up two accounts for demonstration (one as the original owner and another as an attacker)"
+        ],
+        "execution_steps": [
+          "Step 1: Deploy the contract on a test network using the original account as the owner",
+          "Step 2: Use the attacker's account to call the `transferOwnership` function with their own address"
+        ],
+        "validation_steps": [
+          "Step 1: Show that the attacker's account now has ownership of the contract, violating the access control principle",
+          "Step 2: Explain how developers can fix the vulnerability by adding an authorization check, such as checking if the caller is the current owner or a designated admin"
+        ]
+      }
+    },
+    {
+      "vulnerability": {
+        "vulnerability_type": "UNCHECKED_LOW_LEVEL_CALLS",
+        "confidence_score": 1.0,
+        "reasoning": "Both the `emergencyWithdraw` and `unsafeSend` functions perform unchecked low-level calls (`address(msg.sender).transfer`) without verifying the return value, making them vulnerable to failure.",
+        "affected_functions": [
+          "emergencyWithdraw()",
+          "unsafeSend(address,uint256)"
+        ],
+        "impact": "These functions could fail and leave funds untransferred or cause contract termination if the external call does not perform as expected.",
+        "exploitation_scenario": "An attacker causes a low-level call to fail (e.g., by sending nonETH transactions), leaving an unknown state in the vulnerable function.",
+        "code_snippet": "function emergencyWithdraw() external {\r\n        payable(msg.sender).transfer(address(this).balance);\r\n    }\n\nfunction unsafeSend(address payable to, uint256 amount) external {\r\n        to.call{value: amount}(\"\");\r\n    }",
+        "skeptic_confidence": 1.0,
+        "validity_reasoning": "Source performs a low-level call without checking its return value.",
+        "skeptic_evidence_lines": [
+          ".call{value: amount}("
+        ],
+        "skeptic_status": "VERIFIED",
+        "confirmed": true,
+        "evidence_source": "source_semantic_verification"
+      },
+      "exploit_plan": {
+        "setup_steps": [
+          "Create a test environment with a simple contract that includes `emergencyWithdraw` and `unsafeSend` functions.",
+          "Deploy the contract to a private Ethereum fork."
+        ],
+        "execution_steps": [
+          "Call `emergencyWithdraw` or `unsafeSend(address,uint256)` functions with a target address that has sufficient Ether or tokens.",
+          "Prevent the target transaction from being successful (e.g., by using a malicious wallet that does not actually send funds)."
+        ],
+        "validation_steps": [
+          "Identify that the low-level call did not succeed due to insufficient funds in the target account.",
+          "Explain that failure of the low-level call results in the execution reverting, demonstrating that the initial transactions were never executed."
+        ]
+      }
+    },
+    {
+      "vulnerability": {
+        "vulnerability_type": "UNCHECKED_LOW_LEVEL_CALLS",
+        "confidence_score": 1.0,
+        "reasoning": "The `unsafeSend` function performs an unchecked low-level call to the target address without verifying the return value, making it vulnerable to failure. Supporting evidence: Deterministic source evidence: A low-level call return value is not checked in the affected function.",
+        "affected_functions": [
+          "unsafeSend(address,uint256)"
+        ],
+        "impact": "If the external call fails for any reason, the state change (`balances[msg.sender] -= amount`) will still be executed, potentially leading to unexpected behavior or loss of funds.",
+        "exploitation_scenario": "An attacker causes a low-level call to fail (e.g., by sending nonETH transactions), leaving an unknown state in the `unsafeSend` function.",
+        "code_snippet": "function unsafeSend(address payable to, uint256 amount) external {\r\n        to.call{value: amount}(\"\");\r\n    }",
+        "skeptic_confidence": 1.0,
+        "validity_reasoning": "Source performs a low-level call without checking its return value.",
+        "skeptic_evidence_lines": [
+          ".call{value: amount}("
+        ],
+        "skeptic_status": "VERIFIED",
+        "confirmed": true,
+        "evidence_source": "source_semantic_verification"
+      },
+      "exploit_plan": {
+        "setup_steps": [
+          "Step 1: Create a test environment that demonstrates the vulnerability",
+          "Step 2: Prepare necessary contracts and accounts for the demonstration"
+        ],
+        "execution_steps": [
+          "Step 1: Deploy the vulnerable contract to a test network",
+          "Step 2: Send a transaction through the `unsafeSend` function with an invalid address",
+          "Step 3: Observe the result of the transaction"
+        ],
+        "validation_steps": [
+          "Step 1: Explain what security principle was violated \u2013 Unchecked low-level calls can lead to loss of funds or failure if the call does not succeed and the return value is not checked.",
+          "Step 2: Show how developers can fix this vulnerability \u2013 Use a `require` statement to check the return value after performing a low-level call."
+        ]
+      }
+    },
+    {
+      "vulnerability": {
+        "vulnerability_type": "ACCESS_CONTROL",
+        "confidence_score": 1.0,
+        "reasoning": "The contract allows anyone to destroy it using the `destroy` function without any checks or conditions, removing its functionality and potentially leaving funds untransferred. Supporting evidence: Deterministic source evidence: An externally callable function reaches selfdestruct without an authorization check.",
+        "affected_functions": [
+          "destroy()"
+        ],
+        "impact": "Any address can cause the contraction to self-destruct, losing all funds held within it.",
+        "exploitation_scenario": "An attacker calls `destroy()` from an arbitrary address. The contract immediately begins destroying itself, losing all funds.",
+        "code_snippet": "function destroy() external {\r\n        selfdestruct(payable(msg.sender));\r\n    }",
+        "skeptic_confidence": 1.0,
+        "validity_reasoning": "Source shows an externally callable privileged capability without authorization.",
+        "skeptic_evidence_lines": [
+          "selfdestruct("
+        ],
+        "skeptic_status": "VERIFIED",
+        "confirmed": true,
+        "evidence_source": "source_semantic_verification"
+      },
+      "exploit_plan": {
+        "setup_steps": [
+          "Step 1: Create a simple ERC20 token contract with the `destroy` function.",
+          "Step 2: Deploy the contract to a test environment."
+        ],
+        "execution_steps": [
+          "Step 1: Deploy several accounts and mint some tokens to each account.",
+          "Step 2: Allow anyone (unauthorized) to call the `destroy` function on the token contract."
+        ],
+        "validation_steps": [
+          "Step 1: Explain that the vulnerability allows anyone to destroy the contract, removing its functionality and potentially leaving funds untransferred.",
+          "Step 2: Show how developers can fix this by adding an access control check, such as requiring a specific role or ownership verification before allowing the `destroy` function to be called."
+        ]
+      }
+    },
+    {
+      "vulnerability": {
+        "vulnerability_type": "REENTRANCY",
+        "confidence_score": 0.95,
+        "reasoning": "The `withdraw` function makes an external call (`msg.sender.call{value: amount}()`) followed by a state change (`balances[msg.sender] -= amount`). This is a classic pattern for reentrancy attacks. Supporting evidence: Deterministic source evidence found in withdraw(uint256).",
+        "affected_functions": [
+          "withdraw(uint256)"
+        ],
+        "impact": "The attacker can drain the contract by repeatedly calling `withdraw` inside their fallback function before the balance update is completed.",
+        "exploitation_scenario": "An attacker uses Reentrance contracts (https://github.com/npgh4d7/Reentrance/blob/master/DenialOfService-Flows/dos_reentry.sol) to continually call `withdraw` repeatedly, stealing all funds from the contract.",
+        "code_snippet": "function withdraw(uint256 amount) external {\r\n        require(balances[msg.sender] >= amount);\r\n\r\n        (bool success,) = msg.sender.call{value: amount}(\"\");\r\n\r\n        require(success);\r\n\r\n        balances[msg.sender] -= amount;\r\n    }",
+        "skeptic_confidence": 0.95,
+        "validity_reasoning": "Source execution order shows an external interaction before a state update; this violates checks-effects-interactions and supports the reported reentrancy finding.",
+        "skeptic_evidence_lines": [
+          ".call{value: amount}(",
+          "balances[msg.sender] -="
+        ],
+        "skeptic_status": "VERIFIED",
+        "confirmed": true,
+        "evidence_source": "source_semantic_verification"
+      },
+      "exploit_plan": {
+        "setup_steps": [
+          "Fund the target and deploy a re-entering receiver."
+        ],
+        "execution_steps": [
+          "Deposit through the receiver, then call withdraw to re-enter before the balance update."
+        ],
+        "validation_steps": [
+          "Assert that the receiver withdrew more than its original deposit."
+        ]
+      }
+    },
+    {
+      "vulnerability": {
+        "vulnerability_type": "access_control",
+        "confidence_score": 0.9,
+        "reasoning": "Deterministic source evidence: An externally callable emergency-style function transfers the contract's full balance without authorization.",
+        "affected_functions": [
+          "emergencyWithdraw()"
+        ],
+        "impact": "High",
+        "severity": "High",
+        "remediation": "Restrict emergency withdrawal of contract-held funds to an authorized role.",
+        "exploitation_scenario": "Any account can invoke the affected externally callable function.",
+        "code_snippet": "function emergencyWithdraw() external {\r\n        payable(msg.sender).transfer(address(this).balance);\r\n    }",
+        "skeptic_confidence": 0.9,
+        "validity_reasoning": "Source shows an externally callable privileged capability without authorization.",
+        "skeptic_evidence_lines": [
+          "address(this).balance"
+        ],
+        "skeptic_status": "VERIFIED",
+        "confirmed": true,
+        "evidence_source": "source_semantic_verification"
+      },
+      "exploit_plan": {
+        "setup_steps": [
+          "Step 1: Create a test environment that demonstrates the vulnerability",
+          "Step 2: Deploy a vulnerable smart contract with the provided code snippet"
+        ],
+        "execution_steps": [
+          "Step 1: Demonstrate the normal contract behavior by transferring Ether to the contract and checking the balance",
+          "Step 2: Simulate an attack where a user calls the emergencyWithdraw function and transfer the contract's full balance to themselves"
+        ],
+        "validation_steps": [
+          "Step 1: Explain that the security principle violated is access control, as anyone can call the emergencyWithdraw function without proper authorization",
+          "Step 2: Show how developers can fix this vulnerability by adding a modifier check on the emergencyWithdraw function to ensure it can only be called by authorized accounts (e.g., the contract owner)"
+        ]
+      }
+    },
+    {
+      "vulnerability": {
+        "vulnerability_type": "access_control",
+        "confidence_score": 0.9,
+        "reasoning": "Deterministic source evidence: An externally callable administrative setter assigns another user's financial balance without authorization.",
+        "affected_functions": [
+          "setBalance(address,uint256)"
+        ],
+        "impact": "High",
+        "severity": "High",
+        "remediation": "Restrict balance administration to an authorized role and validate the update authority.",
+        "exploitation_scenario": "Any account can invoke the affected externally callable function.",
+        "code_snippet": "function setBalance(address user, uint256 amount) external {\r\n        balances[user] = amount;\r\n    }",
+        "skeptic_confidence": 0.9,
+        "validity_reasoning": "Source shows an externally callable privileged capability without authorization.",
+        "skeptic_evidence_lines": [
+          "balances[user] ="
+        ],
+        "skeptic_status": "VERIFIED",
+        "confirmed": true,
+        "evidence_source": "source_semantic_verification"
+      },
+      "exploit_plan": {
+        "setup_steps": [
+          "Step 1: Create a test environment that demonstrates the vulnerability",
+          "Step 2: Prepare necessary contracts and accounts for the demonstration"
+        ],
+        "execution_steps": [
+          "Step 1: Demonstrate the normal contract behavior",
+          "Step 2: Simulate an attack by setting another user's balance without authorization"
+        ],
+        "validation_steps": [
+          "Step 1: Explain what security principle was violated (Access Control)",
+          "Step 2: Show how developers can fix this vulnerability by adding access control checks"
+        ]
+      }
+    },
+    {
+      "vulnerability": {
+        "vulnerability_type": "bad_randomness",
+        "confidence_score": 0.69,
+        "reasoning": "Deterministic source evidence found in random().",
+        "affected_functions": [
+          "random()"
+        ],
+        "impact": "High",
+        "severity": "High",
+        "remediation": "Use a verifiable randomness source instead of miner-influenced block values.",
+        "exploitation_scenario": "Confirmed by function-scoped deterministic source analysis.",
+        "code_snippet": "function random() external view returns (uint256) {\r\n        return uint256(\r\n            keccak256(\r\n                abi.encodePacked(\r\n                    block.timestamp,\r\n                    block.prevrandao,\r\n                    msg.sender\r\n                )\r\n            )\r\n        );\r\n    }",
+        "skeptic_confidence": 0.69,
+        "validity_reasoning": "Deterministic source evidence found in `random()` but the function generates a pseudo-random number, which is not problematic for most use cases where randomness is needed (e.g., lotteries). The analyzer's reasoning might be too broad here.",
+        "skeptic_evidence_lines": [
+          "function random() external view returns (uint256) { return uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, msg.sender))); }"
+        ],
+        "skeptic_status": "NEEDS_REVIEW",
+        "confirmed": false,
+        "evidence_source": "skeptic",
+        "confidence_level": "Likely"
+      },
+      "exploit_plan": {
+        "setup_steps": [
+          "Step 1: Create a test environment that demonstrates the vulnerability",
+          "Step 2: Prepare necessary contracts and accounts for the demonstration"
+        ],
+        "execution_steps": [
+          "Step 3: Deploy the vulnerable contract to the test environment",
+          "Step 4: Simulate multiple users calling the random() function and observe the outcomes",
+          "Step 5: Change block.prevrandao value to manipulate the random output"
+        ],
+        "validation_steps": [
+          "Step 6: Explain what security principle was violated - The use of block.timestamp, block.prevrandao, and msg.sender in a non-deterministic way allows for predictable randomness",
+          "Step 7: Show how developers can fix this vulnerability: Replace block.prevrandao with an actual source of randomness like a decentralized oracle service that provides true randomness"
+        ]
+      }
+    }
+  ],
+  "poc_metrics": {
+    "generated_pocs": 0,
+    "compiled_pocs": 0,
+    "executed_pocs": 0,
+    "successful_exploits": 0,
+    "compilation_failures": 0,
+    "execution_failures": 0,
+    "repair_attempts": 0,
+    "average_compile_time": 0.0,
+    "average_execution_time": 0.0
+  },
+  "token_usage": null
+}

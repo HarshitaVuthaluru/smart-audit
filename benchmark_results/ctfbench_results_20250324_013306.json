@@ -1,0 +1,822 @@
+{
+  "o3-mini-rag-off": {
+    "with_error": {
+      "data_structure_security": {
+        "category": "data_structure_security",
+        "file": "data_structure_security.md",
+        "true_positive": 1.0,
+        "false_positive": 0.0,
+        "false_negative": 0.0,
+        "lines_of_code": 46,
+        "vdr": 1.0,
+        "oi": 0.0,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 0,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 0 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "privacy_crypto_security": {
+        "category": "privacy_crypto_security",
+        "file": "privacy_crypto_security.md",
+        "true_positive": 0.0,
+        "false_positive": 0.0,
+        "false_negative": 1.0,
+        "lines_of_code": 66,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 0,
+            "false_positive": 0,
+            "false_negative": 1,
+            "analysis": "Run 1: LLM did not detect the vulnerability and found 0 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "gas_security": {
+        "category": "gas_security",
+        "file": "gas_security.md",
+        "true_positive": 1.0,
+        "false_positive": 0.0,
+        "false_negative": 0.0,
+        "lines_of_code": 51,
+        "vdr": 1.0,
+        "oi": 0.0196078431372549,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 0,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 1 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "arithmetic_security": {
+        "category": "arithmetic_security",
+        "file": "arithmetic_security.md",
+        "true_positive": 1.0,
+        "false_positive": 0.0,
+        "false_negative": 0.0,
+        "lines_of_code": 122,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 0,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM did not detect the vulnerability and found 0 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "access_control": {
+        "category": "access_control",
+        "file": "access_control.md",
+        "true_positive": 1.0,
+        "false_positive": 0.0,
+        "false_negative": 0.0,
+        "lines_of_code": 65,
+        "vdr": 1.0,
+        "oi": 0.015384615384615385,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 0,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 1 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "cryptoeconomic_security": {
+        "category": "cryptoeconomic_security",
+        "file": "cryptoeconomic_security.md",
+        "true_positive": 1.0,
+        "false_positive": 1.0,
+        "false_negative": 0.0,
+        "lines_of_code": 34,
+        "vdr": 1.0,
+        "oi": 0.08823529411764706,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 1,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 3 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "boundary_condition": {
+        "category": "boundary_condition",
+        "file": "boundary_condition.md",
+        "true_positive": 0.0,
+        "false_positive": 1.0,
+        "false_negative": 1.0,
+        "lines_of_code": 70,
+        "vdr": 0.0,
+        "oi": 0.014285714285714285,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 0,
+            "false_positive": 1,
+            "false_negative": 1,
+            "analysis": "Run 1: LLM did not detect the vulnerability and found 1 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      }
+    },
+    "no_error": {
+      "arithmetic_security": {
+        "category": "arithmetic_security",
+        "file": "analysis_report_Lending.sol_20250324_003142.md",
+        "true_positive": 0,
+        "false_positive": 1,
+        "false_negative": 0,
+        "lines_of_code": 122,
+        "vdr": 0.0,
+        "oi": 0.00819672131147541,
+        "analysis": "Found 1 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      },
+      "data_structure_security": {
+        "category": "data_structure_security",
+        "file": "analysis_report_Vesting.sol_20250324_003352.md",
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "lines_of_code": 46,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Found 0 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      },
+      "access_control": {
+        "category": "access_control",
+        "file": "analysis_report_Voting.sol_20250324_003348.md",
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "lines_of_code": 65,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Found 0 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      },
+      "gas_security": {
+        "category": "gas_security",
+        "file": "analysis_report_MerkleDrop.sol_20250324_003213.md",
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "lines_of_code": 51,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Found 0 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      }
+    }
+  },
+  "claude-3-7-analyzer-rag-off": {
+    "with_error": {
+      "data_structure_security": {
+        "category": "data_structure_security",
+        "file": "data_structure_security.md",
+        "true_positive": 1.0,
+        "false_positive": 1.0,
+        "false_negative": 0.0,
+        "lines_of_code": 46,
+        "vdr": 1.0,
+        "oi": 0.021739130434782608,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 1,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 1 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "privacy_crypto_security": {
+        "category": "privacy_crypto_security",
+        "file": "privacy_crypto_security.md",
+        "true_positive": 0.0,
+        "false_positive": 0.0,
+        "false_negative": 1.0,
+        "lines_of_code": 66,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 0,
+            "false_positive": 0,
+            "false_negative": 1,
+            "analysis": "Run 1: LLM did not detect the vulnerability and found 0 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "gas_security": {
+        "category": "gas_security",
+        "file": "gas_security.md",
+        "true_positive": 1.0,
+        "false_positive": 1.0,
+        "false_negative": 0.0,
+        "lines_of_code": 51,
+        "vdr": 1.0,
+        "oi": 0.0196078431372549,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 1,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 1 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "arithmetic_security": {
+        "category": "arithmetic_security",
+        "file": "arithmetic_security.md",
+        "true_positive": 1.0,
+        "false_positive": 0.0,
+        "false_negative": 0.0,
+        "lines_of_code": 122,
+        "vdr": 1.0,
+        "oi": 0.0,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 0,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 0 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "access_control": {
+        "category": "access_control",
+        "file": "access_control.md",
+        "true_positive": 1.0,
+        "false_positive": 3.0,
+        "false_negative": 0.0,
+        "lines_of_code": 65,
+        "vdr": 1.0,
+        "oi": 0.046153846153846156,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 3,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 3 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "cryptoeconomic_security": {
+        "category": "cryptoeconomic_security",
+        "file": "cryptoeconomic_security.md",
+        "true_positive": 1.0,
+        "false_positive": 4.0,
+        "false_negative": 0.0,
+        "lines_of_code": 34,
+        "vdr": 1.0,
+        "oi": 0.11764705882352941,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 4,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 4 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "boundary_condition": {
+        "category": "boundary_condition",
+        "file": "boundary_condition.md",
+        "true_positive": 0.0,
+        "false_positive": 1.0,
+        "false_negative": 1.0,
+        "lines_of_code": 70,
+        "vdr": 0.0,
+        "oi": 0.014285714285714285,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 0,
+            "false_positive": 1,
+            "false_negative": 1,
+            "analysis": "Run 1: LLM did not detect the vulnerability and found 1 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      }
+    },
+    "no_error": {
+      "data_structure_security": {
+        "category": "data_structure_security",
+        "file": "analysis_report_Vesting.sol_20250324_004010.md",
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "lines_of_code": 46,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Found 0 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      },
+      "access_control": {
+        "category": "access_control",
+        "file": "analysis_report_Voting.sol_20250324_004004.md",
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "lines_of_code": 65,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Found 0 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      },
+      "gas_security": {
+        "category": "gas_security",
+        "file": "analysis_report_MerkleDrop.sol_20250324_004018.md",
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "lines_of_code": 51,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Found 0 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      },
+      "arithmetic_security": {
+        "category": "arithmetic_security",
+        "file": "analysis_report_Lending.sol_20250324_004025.md",
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "lines_of_code": 122,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Found 0 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      }
+    }
+  },
+  "o3-mini-rag-on": {
+    "with_error": {
+      "data_structure_security": {
+        "category": "data_structure_security",
+        "file": "data_structure_security.md",
+        "true_positive": 0.0,
+        "false_positive": 1.0,
+        "false_negative": 1.0,
+        "lines_of_code": 46,
+        "vdr": 0.0,
+        "oi": 0.021739130434782608,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 0,
+            "false_positive": 1,
+            "false_negative": 1,
+            "analysis": "Run 1: LLM did not detect the vulnerability and found 1 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "privacy_crypto_security": {
+        "category": "privacy_crypto_security",
+        "file": "privacy_crypto_security.md",
+        "true_positive": 0.0,
+        "false_positive": 0.0,
+        "false_negative": 1.0,
+        "lines_of_code": 66,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 0,
+            "false_positive": 0,
+            "false_negative": 1,
+            "analysis": "Run 1: LLM did not detect the vulnerability and found 0 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "gas_security": {
+        "category": "gas_security",
+        "file": "gas_security.md",
+        "true_positive": 1.0,
+        "false_positive": 1.0,
+        "false_negative": 0.0,
+        "lines_of_code": 51,
+        "vdr": 1.0,
+        "oi": 0.0196078431372549,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 1,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 1 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "arithmetic_security": {
+        "category": "arithmetic_security",
+        "file": "arithmetic_security.md",
+        "true_positive": 0.0,
+        "false_positive": 1.0,
+        "false_negative": 1.0,
+        "lines_of_code": 122,
+        "vdr": 0.0,
+        "oi": 0.00819672131147541,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 0,
+            "false_positive": 1,
+            "false_negative": 1,
+            "analysis": "Run 1: LLM did not detect the vulnerability and found 1 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "access_control": {
+        "category": "access_control",
+        "file": "access_control.md",
+        "true_positive": 1.0,
+        "false_positive": 1.0,
+        "false_negative": 0.0,
+        "lines_of_code": 65,
+        "vdr": 1.0,
+        "oi": 0.015384615384615385,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 1,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 1 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "cryptoeconomic_security": {
+        "category": "cryptoeconomic_security",
+        "file": "cryptoeconomic_security.md",
+        "true_positive": 1.0,
+        "false_positive": 2.0,
+        "false_negative": 0.0,
+        "lines_of_code": 34,
+        "vdr": 1.0,
+        "oi": 0.058823529411764705,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 2,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 2 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "boundary_condition": {
+        "category": "boundary_condition",
+        "file": "boundary_condition.md",
+        "true_positive": 0.0,
+        "false_positive": 1.0,
+        "false_negative": 1.0,
+        "lines_of_code": 70,
+        "vdr": 0.0,
+        "oi": 0.014285714285714285,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 0,
+            "false_positive": 1,
+            "false_negative": 1,
+            "analysis": "Run 1: LLM did not detect the vulnerability and found 1 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      }
+    },
+    "no_error": {
+      "data_structure_security": {
+        "category": "data_structure_security",
+        "file": "analysis_report_Vesting.sol_20250324_003537.md",
+        "true_positive": 0,
+        "false_positive": 2,
+        "false_negative": 0,
+        "lines_of_code": 46,
+        "vdr": 0.0,
+        "oi": 0.043478260869565216,
+        "analysis": "Found 2 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      },
+      "gas_security": {
+        "category": "gas_security",
+        "file": "analysis_report_MerkleDrop.sol_20250324_003602.md",
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "lines_of_code": 51,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Found 0 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      },
+      "access_control": {
+        "category": "access_control",
+        "file": "analysis_report_Voting.sol_20250324_003534.md",
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "lines_of_code": 65,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Found 0 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      },
+      "arithmetic_security": {
+        "category": "arithmetic_security",
+        "file": "analysis_report_Lending.sol_20250324_003413.md",
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "lines_of_code": 122,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Found 0 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      }
+    }
+  },
+  "claude-3-7-analyzer-rag-on": {
+    "with_error": {
+      "data_structure_security": {
+        "category": "data_structure_security",
+        "file": "data_structure_security.md",
+        "true_positive": 1.0,
+        "false_positive": 0.0,
+        "false_negative": 0.0,
+        "lines_of_code": 46,
+        "vdr": 1.0,
+        "oi": 0.0,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 0,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 0 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "privacy_crypto_security": {
+        "category": "privacy_crypto_security",
+        "file": "privacy_crypto_security.md",
+        "true_positive": 1.0,
+        "false_positive": 0.0,
+        "false_negative": 0.0,
+        "lines_of_code": 66,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 0,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM did not detect the vulnerability and found 0 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "gas_security": {
+        "category": "gas_security",
+        "file": "gas_security.md",
+        "true_positive": 1.0,
+        "false_positive": 1.0,
+        "false_negative": 0.0,
+        "lines_of_code": 51,
+        "vdr": 1.0,
+        "oi": 0.0196078431372549,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 1,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 1 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "arithmetic_security": {
+        "category": "arithmetic_security",
+        "file": "arithmetic_security.md",
+        "true_positive": 1.0,
+        "false_positive": 0.0,
+        "false_negative": 0.0,
+        "lines_of_code": 122,
+        "vdr": 0.0,
+        "oi": 0.01639344262295082,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 0,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM did not detect the vulnerability and found 2 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "access_control": {
+        "category": "access_control",
+        "file": "access_control.md",
+        "true_positive": 1.0,
+        "false_positive": 1.0,
+        "false_negative": 0.0,
+        "lines_of_code": 65,
+        "vdr": 1.0,
+        "oi": 0.015384615384615385,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 1,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 1 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "cryptoeconomic_security": {
+        "category": "cryptoeconomic_security",
+        "file": "cryptoeconomic_security.md",
+        "true_positive": 1.0,
+        "false_positive": 2.0,
+        "false_negative": 0.0,
+        "lines_of_code": 34,
+        "vdr": 1.0,
+        "oi": 0.058823529411764705,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 1,
+            "false_positive": 2,
+            "false_negative": 0,
+            "analysis": "Run 1: LLM detected the vulnerability and found 2 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      },
+      "boundary_condition": {
+        "category": "boundary_condition",
+        "file": "boundary_condition.md",
+        "true_positive": 0.0,
+        "false_positive": 0.0,
+        "false_negative": 1.0,
+        "lines_of_code": 70,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Averaged results over 1 LLM evaluation runs",
+        "evaluation_method": "llm",
+        "llm_results": [
+          {
+            "true_positive": 0,
+            "false_positive": 0,
+            "false_negative": 1,
+            "analysis": "Run 1: LLM did not detect the vulnerability and found 0 false positives",
+            "evaluation_method": "llm"
+          }
+        ]
+      }
+    },
+    "no_error": {
+      "gas_security": {
+        "category": "gas_security",
+        "file": "analysis_report_MerkleDrop.sol_20250324_003831.md",
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "lines_of_code": 51,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Found 0 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      },
+      "access_control": {
+        "category": "access_control",
+        "file": "analysis_report_Voting.sol_20250324_003837.md",
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "lines_of_code": 65,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Found 0 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      },
+      "arithmetic_security": {
+        "category": "arithmetic_security",
+        "file": "analysis_report_Lending.sol_20250324_003900.md",
+        "true_positive": 0,
+        "false_positive": 1,
+        "false_negative": 0,
+        "lines_of_code": 122,
+        "vdr": 0.0,
+        "oi": 0.00819672131147541,
+        "analysis": "Found 1 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      },
+      "data_structure_security": {
+        "category": "data_structure_security",
+        "file": "analysis_report_Vesting.sol_20250324_003821.md",
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "lines_of_code": 46,
+        "vdr": 0.0,
+        "oi": 0.0,
+        "analysis": "Found 0 false positives in no-error contract",
+        "evaluation_method": "llm",
+        "llm_results": []
+      }
+    }
+  }
+}

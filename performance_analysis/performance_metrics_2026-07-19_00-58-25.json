@@ -1,0 +1,49 @@
+{
+  "run_info": {
+    "timestamp": "2026-07-19_00-58-25",
+    "config": {
+      "analyzer_model": "o3-mini",
+      "skeptic_model": "o3-mini",
+      "exploiter_model": "o3-mini",
+      "generator_model": "o3-mini",
+      "context_model": "o3-mini",
+      "all_models": null,
+      "use_rag": false,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 14.974731206893921
+  },
+  "token_usage": {
+    "by_agent": {},
+    "by_model": {},
+    "total": {
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0,
+      "call_count": 0
+    }
+  },
+  "code_metrics": {
+    "total_lines": 22,
+    "file_count": 1,
+    "files": [
+      "examples/VulnerableLendingContract.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 14.974731206893921,
+    "stage_times": {
+      "initialization": 0.00501251220703125,
+      "static_analysis": 0.22702336311340332,
+      "llm_analysis": 1.1115069389343262,
+      "analyzer_agent": 13.623187065124512,
+      "results_reporting": 0.0040013790130615234,
+      "export": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 0.0,
+    "tokens_per_loc": 0.0
+  }
+}

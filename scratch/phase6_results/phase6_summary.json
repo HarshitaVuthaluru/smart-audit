@@ -1,0 +1,233 @@
+{
+  "contracts_evaluated": 12,
+  "total_expected_findings": 12,
+  "total_findings_emitted": 13,
+  "tp": 11,
+  "fn": 1,
+  "fp": 0,
+  "precision": 1.0,
+  "recall": 0.9166666666666666,
+  "f1": 0.9565217391304348,
+  "category_accuracy": 1.0,
+  "function_localization": 0.9166666666666666,
+  "per_contract": [
+    {
+      "contract": "etherstore.sol",
+      "in_rag": false,
+      "expected_function": "withdrawFunds",
+      "expected_category": "reentrancy",
+      "evidence": "Line 27: msg.sender.call.value() before balances update at line 28",
+      "localized": true,
+      "correct_category": true,
+      "status": "TP",
+      "actual_category": "reentrancy",
+      "actual_functions": [
+        "withdrawFunds(uint256)"
+      ],
+      "skeptic_verdict": "VERIFIED",
+      "source_grounded": "YES"
+    },
+    {
+      "contract": "etherbank.sol",
+      "in_rag": false,
+      "expected_function": "withdrawBalance",
+      "expected_category": "reentrancy",
+      "evidence": "Line 21: msg.sender.call.value() before userBalances zeroed at line 22",
+      "localized": true,
+      "correct_category": true,
+      "status": "TP",
+      "actual_category": "reentrancy",
+      "actual_functions": [
+        "withdrawBalance()"
+      ],
+      "skeptic_verdict": "VERIFIED",
+      "source_grounded": "YES"
+    },
+    {
+      "contract": "simple_dao.sol",
+      "in_rag": false,
+      "expected_function": "withdraw",
+      "expected_category": "reentrancy",
+      "evidence": "Line 19: msg.sender.call.value() before credit decrement at line 20",
+      "localized": true,
+      "correct_category": true,
+      "status": "TP",
+      "actual_category": "reentrancy",
+      "actual_functions": [
+        "withdraw(uint256)"
+      ],
+      "skeptic_verdict": "VERIFIED",
+      "source_grounded": "YES"
+    },
+    {
+      "contract": "reentrancy_simple.sol",
+      "in_rag": false,
+      "expected_function": "withdrawBalance",
+      "expected_category": "reentrancy",
+      "evidence": "Line 24: msg.sender.call.value() before userBalance zeroed at line 27",
+      "localized": true,
+      "correct_category": true,
+      "status": "TP",
+      "actual_category": "reentrancy",
+      "actual_functions": [
+        "withdrawBalance()"
+      ],
+      "skeptic_verdict": "VERIFIED",
+      "source_grounded": "YES"
+    },
+    {
+      "contract": "simple_suicide.sol",
+      "in_rag": true,
+      "expected_function": "sudicideAnyone",
+      "expected_category": "access_control",
+      "evidence": "Lines 12-13: unprotected selfdestruct callable by anyone",
+      "localized": true,
+      "correct_category": true,
+      "status": "TP",
+      "actual_category": "access_control",
+      "actual_functions": [
+        "sudicideAnyone()"
+      ],
+      "skeptic_verdict": "VERIFIED",
+      "source_grounded": "YES"
+    },
+    {
+      "contract": "unprotected0.sol",
+      "in_rag": false,
+      "expected_function": "changeOwner",
+      "expected_category": "access_control",
+      "evidence": "Line 25: changeOwner callable without onlyowner modifier",
+      "localized": true,
+      "correct_category": true,
+      "status": "TP",
+      "actual_category": "access_control",
+      "actual_functions": [
+        "changeOwner(address)"
+      ],
+      "skeptic_verdict": "VERIFIED",
+      "source_grounded": "YES"
+    },
+    {
+      "contract": "phishable.sol",
+      "in_rag": false,
+      "expected_function": "withdrawAll",
+      "expected_category": "access_control",
+      "evidence": "Line 20: tx.origin authentication (phishable) allows any authorized UI to drain funds",
+      "localized": true,
+      "correct_category": true,
+      "status": "TP",
+      "actual_category": "access_control",
+      "actual_functions": [
+        "withdrawAll(address)"
+      ],
+      "skeptic_verdict": "VERIFIED",
+      "source_grounded": "YES"
+    },
+    {
+      "contract": "random_number_generator.sol",
+      "in_rag": false,
+      "expected_function": "random",
+      "expected_category": "bad_randomness",
+      "evidence": "Lines 12,18,20,22: block.timestamp/block.number/blockhash used as randomness seeds",
+      "localized": true,
+      "correct_category": true,
+      "status": "TP",
+      "actual_category": "bad_randomness",
+      "actual_functions": [
+        "random(uint256)"
+      ],
+      "skeptic_verdict": "VERIFIED",
+      "source_grounded": "YES"
+    },
+    {
+      "contract": "old_blockhash.sol",
+      "in_rag": false,
+      "expected_function": "settle",
+      "expected_category": "bad_randomness",
+      "evidence": "Line 35: blockhash used as game answer (predictable after 256 blocks returns 0)",
+      "localized": true,
+      "correct_category": true,
+      "status": "TP",
+      "actual_category": "bad_randomness",
+      "actual_functions": [
+        "settle()"
+      ],
+      "skeptic_verdict": "VERIFIED",
+      "source_grounded": "YES"
+    },
+    {
+      "contract": "mishandled.sol",
+      "in_rag": true,
+      "expected_function": "withdrawBalance",
+      "expected_category": "unchecked_low_level_calls",
+      "evidence": "Line 14: msg.sender.send() return value not checked",
+      "localized": false,
+      "correct_category": false,
+      "status": "FN (missed)",
+      "actual_category": "NOT_DETECTED",
+      "actual_functions": [],
+      "skeptic_verdict": "N/A",
+      "source_grounded": "NO"
+    },
+    {
+      "contract": "unchecked_return_value.sol",
+      "in_rag": false,
+      "expected_function": "callnotchecked",
+      "expected_category": "unchecked_low_level_calls",
+      "evidence": "Line 17: callee.call() return value not checked",
+      "localized": true,
+      "correct_category": true,
+      "status": "TP",
+      "actual_category": "unchecked_low_level_calls",
+      "actual_functions": [
+        "callnotchecked(address)"
+      ],
+      "skeptic_verdict": "VERIFIED",
+      "source_grounded": "YES"
+    },
+    {
+      "contract": "integer_overflow_minimal.sol",
+      "in_rag": false,
+      "expected_function": "run",
+      "expected_category": "arithmetic",
+      "evidence": "Line 17: count -= input without overflow check (Solidity <0.8)",
+      "localized": true,
+      "correct_category": true,
+      "status": "TP",
+      "actual_category": "arithmetic",
+      "actual_functions": [
+        "run(uint256)"
+      ],
+      "skeptic_verdict": "LIKELY",
+      "source_grounded": "YES"
+    }
+  ],
+  "false_positives": [],
+  "category_breakdown": {
+    "reentrancy": {
+      "expected": 4,
+      "tp": 4,
+      "fn": 0
+    },
+    "access_control": {
+      "expected": 3,
+      "tp": 3,
+      "fn": 0
+    },
+    "bad_randomness": {
+      "expected": 2,
+      "tp": 2,
+      "fn": 0
+    },
+    "unchecked_low_level_calls": {
+      "expected": 2,
+      "tp": 1,
+      "fn": 1
+    },
+    "arithmetic": {
+      "expected": 1,
+      "tp": 1,
+      "fn": 0
+    }
+  }
+}

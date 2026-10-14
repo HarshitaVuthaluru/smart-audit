@@ -1,0 +1,16 @@
+{
+  "rechecked_vulnerabilities": [],
+  "generated_pocs": [],
+  "poc_metrics": {
+    "generated_pocs": 0,
+    "compiled_pocs": 0,
+    "executed_pocs": 0,
+    "successful_exploits": 0,
+    "compilation_failures": 0,
+    "execution_failures": 0,
+    "repair_attempts": 0,
+    "average_compile_time": 0.0,
+    "average_execution_time": 0.0
+  },
+  "token_usage": null
+}

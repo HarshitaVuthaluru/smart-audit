@@ -1,0 +1,77 @@
+{
+  "run_info": {
+    "timestamp": "2026-08-02_18-23-28",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 750.1550409793854
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 3616,
+        "completion_tokens": 772,
+        "total_tokens": 4388,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 1599,
+        "completion_tokens": 864,
+        "total_tokens": 2463,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 2696,
+        "completion_tokens": 951,
+        "total_tokens": 3647,
+        "call_count": 5
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 7911,
+        "completion_tokens": 2587,
+        "total_tokens": 10498,
+        "call_count": 7
+      }
+    },
+    "total": {
+      "prompt_tokens": 7911,
+      "completion_tokens": 2587,
+      "total_tokens": 10498,
+      "call_count": 7
+    }
+  },
+  "code_metrics": {
+    "total_lines": 45,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\4d100374-8f8d-4c06-8893-691ba74441b3_VulnerableBank.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 750.1550409793854,
+    "stage_times": {
+      "initialization": 0.0,
+      "static_analysis": 6.785709381103516,
+      "analyzer_agent": 303.72351694107056,
+      "skeptic_agent": 175.4575436115265,
+      "exploiter_agent": 61.868162870407104,
+      "generator_agent": 202.30114006996155,
+      "exploit_runner": 0.0011017322540283203,
+      "results_reporting": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 13.994440384342482,
+    "tokens_per_loc": 233.2888888888889
+  }
+}

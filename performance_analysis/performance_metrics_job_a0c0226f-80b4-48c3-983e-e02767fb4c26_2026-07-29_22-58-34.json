@@ -1,0 +1,68 @@
+{
+  "run_info": {
+    "timestamp": "2026-07-29_22-57-30",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 64.53704881668091
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 3872,
+        "completion_tokens": 835,
+        "total_tokens": 4707,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 1100,
+        "completion_tokens": 596,
+        "total_tokens": 1696,
+        "call_count": 1
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 4972,
+        "completion_tokens": 1431,
+        "total_tokens": 6403,
+        "call_count": 2
+      }
+    },
+    "total": {
+      "prompt_tokens": 4972,
+      "completion_tokens": 1431,
+      "total_tokens": 6403,
+      "call_count": 2
+    }
+  },
+  "code_metrics": {
+    "total_lines": 45,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\a0c0226f-80b4-48c3-983e-e02767fb4c26_VulnerableBank.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 64.53704881668091,
+    "stage_times": {
+      "initialization": 0.002001523971557617,
+      "static_analysis": 8.725081205368042,
+      "analyzer_agent": 34.684940814971924,
+      "skeptic_agent": 21.121033191680908,
+      "results_reporting": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 99.21432909316756,
+    "tokens_per_loc": 142.2888888888889
+  }
+}

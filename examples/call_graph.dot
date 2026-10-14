@@ -1,0 +1,49 @@
+strict digraph {
+subgraph cluster_0_VulnerableLendingContract {
+label = "VulnerableLendingContract"
+"0_deposit" [label="deposit"]
+"0_withdraw" [label="withdraw"]
+"0_getBalance" [label="getBalance"]
+"0_contractBalance" [label="contractBalance"]
+}
+subgraph cluster_1_Token {
+label = "Token"
+"1_transfer" [label="transfer"]
+"1_approve" [label="approve"]
+"1_transferFrom" [label="transferFrom"]
+"1__transfer" [label="_transfer"]
+"1_mint" [label="mint"]
+"1_burn" [label="burn"]
+"1_getCurrentPrice" [label="getCurrentPrice"]
+"1_getPoolLiquidity" [label="getPoolLiquidity"]
+"1_transfer" -> "1__transfer"
+"1_transferFrom" -> "1__transfer"
+}
+subgraph cluster_2_PriceOracle {
+label = "PriceOracle"
+"2_getPrice" [label="getPrice"]
+"2_getPriceFromPair" [label="getPriceFromPair"]
+"2_updatePrice" [label="updatePrice"]
+"2_setTokenPair" [label="setTokenPair"]
+"2_getPrice" -> "2_getPriceFromPair"
+}
+subgraph cluster_3_LendingPool {
+label = "LendingPool"
+"3_deposit" [label="deposit"]
+"3_withdraw" [label="withdraw"]
+"3_borrow" [label="borrow"]
+"3_isHealthy" [label="isHealthy"]
+"3_setCollateralFactor" [label="setCollateralFactor"]
+"3_borrow" -> "3_isHealthy"
+}
+subgraph cluster_solidity {
+label = "[Solidity]"
+}
+"1_getCurrentPrice" -> "2_getPrice" [style="dashed", color="red", label="Inter-Contract"]
+"1_getPoolLiquidity" -> "1_getReserves" [style="dashed", color="red", label="Inter-Contract"]
+"3_deposit" -> "1_transferFrom" [style="dashed", color="red", label="Inter-Contract"]
+"3_withdraw" -> "1_transfer" [style="dashed", color="red", label="Inter-Contract"]
+"3_borrow" -> "2_getPrice" [style="dashed", color="red", label="Inter-Contract"]
+"3_borrow" -> "1_transfer" [style="dashed", color="red", label="Inter-Contract"]
+"3_isHealthy" -> "2_getPrice" [style="dashed", color="red", label="Inter-Contract"]
+}

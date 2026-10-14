@@ -1,0 +1,79 @@
+{
+  "rechecked_vulnerabilities": [
+    {
+      "vulnerability_type": "REENTRANCY",
+      "confidence_score": 1.0,
+      "reasoning": "The withdraw function has an external call followed by state changes, which can be exploited in a reentrancy attack. Supporting evidence: Deterministic source evidence found in withdraw(uint256).",
+      "affected_functions": [
+        "withdraw(uint256)"
+      ],
+      "impact": "An attacker can cause the contract to drain all funds repeatedly.",
+      "exploitation_scenario": [
+        "1. An attacker sends less than the required amount to the deposit function and leaves the balance positive.",
+        "2. The attacker calls the withdraw function and transfers some of their funds to another address before receiving their payment back.",
+        "3. After executing an external call, the state change is made (subtracting from balances), allowing further recursive calls."
+      ],
+      "code_snippet": "function withdraw(uint256 amount) external {\r\n        require(balances[msg.sender] >= amount, \"Insufficient\");\r\n\r\n        (bool success,) = msg.sender.call{value: amount}(\"\");\r\n        require(success);\r\n\r\n        balances[msg.sender] -= amount;\r\n    }",
+      "skeptic_confidence": 1.0,
+      "validity_reasoning": "Source execution order shows an external interaction before a state update; this violates checks-effects-interactions and supports the reported reentrancy finding.",
+      "skeptic_evidence_lines": [
+        ".call{value: amount}(",
+        "balances[msg.sender] -="
+      ],
+      "skeptic_status": "VERIFIED",
+      "confirmed": true,
+      "evidence_source": "source_semantic_verification"
+    }
+  ],
+  "generated_pocs": [
+    {
+      "vulnerability": {
+        "vulnerability_type": "REENTRANCY",
+        "confidence_score": 1.0,
+        "reasoning": "The withdraw function has an external call followed by state changes, which can be exploited in a reentrancy attack. Supporting evidence: Deterministic source evidence found in withdraw(uint256).",
+        "affected_functions": [
+          "withdraw(uint256)"
+        ],
+        "impact": "An attacker can cause the contract to drain all funds repeatedly.",
+        "exploitation_scenario": [
+          "1. An attacker sends less than the required amount to the deposit function and leaves the balance positive.",
+          "2. The attacker calls the withdraw function and transfers some of their funds to another address before receiving their payment back.",
+          "3. After executing an external call, the state change is made (subtracting from balances), allowing further recursive calls."
+        ],
+        "code_snippet": "function withdraw(uint256 amount) external {\r\n        require(balances[msg.sender] >= amount, \"Insufficient\");\r\n\r\n        (bool success,) = msg.sender.call{value: amount}(\"\");\r\n        require(success);\r\n\r\n        balances[msg.sender] -= amount;\r\n    }",
+        "skeptic_confidence": 1.0,
+        "validity_reasoning": "Source execution order shows an external interaction before a state update; this violates checks-effects-interactions and supports the reported reentrancy finding.",
+        "skeptic_evidence_lines": [
+          ".call{value: amount}(",
+          "balances[msg.sender] -="
+        ],
+        "skeptic_status": "VERIFIED",
+        "confirmed": true,
+        "evidence_source": "source_semantic_verification"
+      },
+      "exploit_plan": {
+        "setup_steps": [
+          "Fund the target and deploy a re-entering receiver."
+        ],
+        "execution_steps": [
+          "Deposit through the receiver, then call withdraw to re-enter before the balance update."
+        ],
+        "validation_steps": [
+          "Assert that the receiver withdrew more than its original deposit."
+        ]
+      }
+    }
+  ],
+  "poc_metrics": {
+    "generated_pocs": 0,
+    "compiled_pocs": 0,
+    "executed_pocs": 0,
+    "successful_exploits": 0,
+    "compilation_failures": 0,
+    "execution_failures": 0,
+    "repair_attempts": 0,
+    "average_compile_time": 0.0,
+    "average_execution_time": 0.0
+  },
+  "token_usage": null
+}

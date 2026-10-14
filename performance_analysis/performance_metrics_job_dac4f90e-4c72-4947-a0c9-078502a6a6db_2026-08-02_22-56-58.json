@@ -1,0 +1,77 @@
+{
+  "run_info": {
+    "timestamp": "2026-08-02_22-48-29",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 508.8786208629608
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 3397,
+        "completion_tokens": 792,
+        "total_tokens": 4189,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 1408,
+        "completion_tokens": 741,
+        "total_tokens": 2149,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 3207,
+        "completion_tokens": 1062,
+        "total_tokens": 4269,
+        "call_count": 6
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 8012,
+        "completion_tokens": 2595,
+        "total_tokens": 10607,
+        "call_count": 8
+      }
+    },
+    "total": {
+      "prompt_tokens": 8012,
+      "completion_tokens": 2595,
+      "total_tokens": 10607,
+      "call_count": 8
+    }
+  },
+  "code_metrics": {
+    "total_lines": 45,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\dac4f90e-4c72-4947-a0c9-078502a6a6db_VulnerableBank.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 508.8786208629608,
+    "stage_times": {
+      "initialization": 0.0009949207305908203,
+      "static_analysis": 7.880823612213135,
+      "analyzer_agent": 52.5893452167511,
+      "skeptic_agent": 29.2212975025177,
+      "exploiter_agent": 62.64179086685181,
+      "generator_agent": 212.38240575790405,
+      "exploit_runner": 144.14576625823975,
+      "results_reporting": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 20.84387035559198,
+    "tokens_per_loc": 235.7111111111111
+  }
+}

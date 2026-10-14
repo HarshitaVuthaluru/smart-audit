@@ -1,0 +1,77 @@
+{
+  "run_info": {
+    "timestamp": "2026-08-03_00-10-32",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 715.1843640804291
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 3435,
+        "completion_tokens": 1510,
+        "total_tokens": 4945,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 1794,
+        "completion_tokens": 907,
+        "total_tokens": 2701,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 4299,
+        "completion_tokens": 1562,
+        "total_tokens": 5861,
+        "call_count": 8
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 9528,
+        "completion_tokens": 3979,
+        "total_tokens": 13507,
+        "call_count": 10
+      }
+    },
+    "total": {
+      "prompt_tokens": 9528,
+      "completion_tokens": 3979,
+      "total_tokens": 13507,
+      "call_count": 10
+    }
+  },
+  "code_metrics": {
+    "total_lines": 45,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\59211d84-c7b9-40c4-b46b-03384be2eb91_VulnerableBank.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 715.1843640804291,
+    "stage_times": {
+      "initialization": 0.0010492801666259766,
+      "static_analysis": 9.291221141815186,
+      "analyzer_agent": 59.788180351257324,
+      "skeptic_agent": 56.65016317367554,
+      "exploiter_agent": 101.61648559570312,
+      "generator_agent": 308.7010233402252,
+      "exploit_runner": 179.09171319007874,
+      "results_reporting": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 18.88603929053602,
+    "tokens_per_loc": 300.15555555555557
+  }
+}

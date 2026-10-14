@@ -1,0 +1,81 @@
+{
+  "run_info": {
+    "timestamp": "2025-03-24_11-46-12",
+    "config": {
+      "analyzer_model": "claude-3-7-sonnet-latest",
+      "skeptic_model": "o3-mini",
+      "exploiter_model": "o3-mini",
+      "generator_model": "o3-mini",
+      "context_model": "o3-mini",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 399.31202507019043
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 3236,
+        "completion_tokens": 2600,
+        "total_tokens": 5836,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 1704,
+        "completion_tokens": 2867,
+        "total_tokens": 4571,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 1790,
+        "completion_tokens": 1315,
+        "total_tokens": 3105,
+        "call_count": 3
+      },
+      "generator": {
+        "prompt_tokens": 1830,
+        "completion_tokens": 12334,
+        "total_tokens": 14164,
+        "call_count": 3
+      }
+    },
+    "by_model": {
+      "claude-3-7-sonnet-latest": {
+        "prompt_tokens": 3236,
+        "completion_tokens": 2600,
+        "total_tokens": 5836,
+        "call_count": 1
+      },
+      "o3-mini": {
+        "prompt_tokens": 5324,
+        "completion_tokens": 16516,
+        "total_tokens": 21840,
+        "call_count": 7
+      }
+    },
+    "total": {
+      "prompt_tokens": 8560,
+      "completion_tokens": 19116,
+      "total_tokens": 27676,
+      "call_count": 8
+    }
+  },
+  "code_metrics": {
+    "total_lines": 51,
+    "file_count": 1,
+    "files": ["uploads/031209cf-4525-4152-b895-18b293b18bb8_Airdrop.sol"]
+  },
+  "time_metrics": {
+    "total_seconds": 399.31202507019043,
+    "stage_times": {
+      "initialization": 0.0006489753723144531,
+      "static_analysis": 399.31131410598755
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 69.30920749290021,
+    "tokens_per_loc": 709.6410256410256
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "rechecked_vulnerabilities": [
+    {
+      "vulnerability_type": "bad_randomness",
+      "confidence_score": 1.0,
+      "reasoning": "Deterministic source evidence found in settle().",
+      "affected_functions": [
+        "settle()"
+      ],
+      "impact": "High",
+      "severity": "High",
+      "remediation": "Use a verifiable randomness source instead of miner-influenced block values.",
+      "exploitation_scenario": "Confirmed by function-scoped deterministic source analysis.",
+      "code_snippet": "function settle() public {\n        require(block.number > guesses[msg.sender].block);\n        // <yes> <report> BAD_RANDOMNESS\n        bytes32 answer = blockhash(guesses[msg.sender].block);\n\n        guesses[msg.sender].block = 0;\n        if (guesses[msg.sender].guess == answer) {\n            msg.sender.transfer(2 ether);\n        }\n    }",
+      "skeptic_confidence": 1.0,
+      "validity_reasoning": "Source uses miner-influenced block variable in randomness or decision logic.",
+      "skeptic_evidence_lines": [
+        "block.number"
+      ],
+      "skeptic_status": "VERIFIED",
+      "confirmed": true,
+      "evidence_source": "source_semantic_verification"
+    }
+  ],
+  "generated_pocs": [
+    {
+      "vulnerability": {
+        "vulnerability_type": "bad_randomness",
+        "confidence_score": 1.0,
+        "reasoning": "Deterministic source evidence found in settle().",
+        "affected_functions": [
+          "settle()"
+        ],
+        "impact": "High",
+        "severity": "High",
+        "remediation": "Use a verifiable randomness source instead of miner-influenced block values.",
+        "exploitation_scenario": "Confirmed by function-scoped deterministic source analysis.",
+        "code_snippet": "function settle() public {\n        require(block.number > guesses[msg.sender].block);\n        // <yes> <report> BAD_RANDOMNESS\n        bytes32 answer = blockhash(guesses[msg.sender].block);\n\n        guesses[msg.sender].block = 0;\n        if (guesses[msg.sender].guess == answer) {\n            msg.sender.transfer(2 ether);\n        }\n    }",
+        "skeptic_confidence": 1.0,
+        "validity_reasoning": "Source uses miner-influenced block variable in randomness or decision logic.",
+        "skeptic_evidence_lines": [
+          "block.number"
+        ],
+        "skeptic_status": "VERIFIED",
+        "confirmed": true,
+        "evidence_source": "source_semantic_verification"
+      },
+      "exploit_plan": {
+        "setup_steps": [
+          "Step 1: Create a test environment that demonstrates the vulnerability",
+          "Step 2: Prepare necessary contracts and accounts for the demonstration"
+        ],
+        "execution_steps": [
+          "Step 3: Simulate successful settlement with a correct guess",
+          "Step 4: Simulate failed settlement with an incorrect guess"
+        ],
+        "validation_steps": [
+          "Step 5: Explain what security principle was violated - Determinism in random number generation leads to predictable outcomes",
+          "Step 6: Show how developers can fix this vulnerability by using a truly random source or off-chain verification"
+        ]
+      }
+    }
+  ],
+  "poc_metrics": {
+    "generated_pocs": 0,
+    "compiled_pocs": 0,
+    "executed_pocs": 0,
+    "successful_exploits": 0,
+    "compilation_failures": 0,
+    "execution_failures": 0,
+    "repair_attempts": 0,
+    "average_compile_time": 0.0,
+    "average_execution_time": 0.0
+  },
+  "token_usage": null
+}

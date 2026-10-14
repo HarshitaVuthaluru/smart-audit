@@ -1,0 +1,72 @@
+{
+  "run_info": {
+    "timestamp": "2026-08-11_00-31-35",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 306.47409200668335
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 3493,
+        "completion_tokens": 690,
+        "total_tokens": 4183,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 962,
+        "completion_tokens": 410,
+        "total_tokens": 1372,
+        "call_count": 1
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 4455,
+        "completion_tokens": 1100,
+        "total_tokens": 5555,
+        "call_count": 2
+      }
+    },
+    "total": {
+      "prompt_tokens": 4455,
+      "completion_tokens": 1100,
+      "total_tokens": 5555,
+      "call_count": 2
+    }
+  },
+  "code_metrics": {
+    "total_lines": 15,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\2d0ceb7c-9e1f-46d9-a7be-116a4935ba8b_ReentrancyVault.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 306.47409200668335,
+    "stage_times": {
+      "initialization": 0.001001119613647461,
+      "static_analysis": 9.305815935134888,
+      "project_context_agent": 0.001001596450805664,
+      "analyzer_agent": 71.63686203956604,
+      "skeptic_agent": 37.07100248336792,
+      "exploiter_agent": 0.0010006427764892578,
+      "generator_agent": 24.110387325286865,
+      "exploit_runner": 164.3393988609314,
+      "results_reporting": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 18.125512547007926,
+    "tokens_per_loc": 370.3333333333333
+  }
+}

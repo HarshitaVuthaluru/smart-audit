@@ -1,0 +1,12 @@
+Running 1 test for exploit/src/test/PoC_reentrancy_1742307322.sol:ReentrancyTest
+[PASS] testExploit() (gas: 175421)
+Logs:
+  Starting reentrancy attack demonstration
+  Initial vulnerable contract balance: 10000000000000000000
+  Initial attacker balance: 1000000000000000000
+  Final vulnerable contract balance: 0
+  Final attacker balance: 11000000000000000000
+  Attacker ETH Balance Before exploit: 1000000000000000000
+  Attacker ETH Balance After exploit: 11000000000000000000
+
+Test result: ok. 1 passed; 0 failed; 0 skipped; finished in 1.26s

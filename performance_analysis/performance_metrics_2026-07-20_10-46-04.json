@@ -1,0 +1,85 @@
+{
+  "run_info": {
+    "timestamp": "2026-07-20_10-46-04",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 79.2008728981018
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 2675,
+        "completion_tokens": 149,
+        "total_tokens": 2824,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 994,
+        "completion_tokens": 106,
+        "total_tokens": 1100,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 506,
+        "completion_tokens": 167,
+        "total_tokens": 673,
+        "call_count": 1
+      },
+      "generator": {
+        "prompt_tokens": 549,
+        "completion_tokens": 351,
+        "total_tokens": 900,
+        "call_count": 1
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 4724,
+        "completion_tokens": 773,
+        "total_tokens": 5497,
+        "call_count": 4
+      }
+    },
+    "total": {
+      "prompt_tokens": 4724,
+      "completion_tokens": 773,
+      "total_tokens": 5497,
+      "call_count": 4
+    }
+  },
+  "code_metrics": {
+    "total_lines": 54,
+    "file_count": 1,
+    "files": [
+      "benchmark_data\\contracts\\with_errors\\access_control\\Voting.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 79.2008728981018,
+    "stage_times": {
+      "initialization": 0.006001472473144531,
+      "static_analysis": 0.7671458721160889,
+      "llm_analysis": 2.0174248218536377,
+      "analyzer_agent": 14.135957956314087,
+      "skeptic_agent": 6.143076658248901,
+      "exploiter_agent": 7.637923240661621,
+      "generator_agent": 13.106743812561035,
+      "exploit_runner": 35.379626750946045,
+      "results_reporting": 0.003973960876464844,
+      "export": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 69.40580070465039,
+    "tokens_per_loc": 101.79629629629629
+  }
+}

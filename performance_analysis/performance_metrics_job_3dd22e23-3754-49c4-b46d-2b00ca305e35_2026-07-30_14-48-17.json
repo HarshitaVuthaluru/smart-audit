@@ -1,0 +1,60 @@
+{
+  "run_info": {
+    "timestamp": "2026-07-30_14-47-45",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": false,
+      "skip_poc": true,
+      "auto_run": false
+    },
+    "total_time_seconds": 31.328996419906616
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 1350,
+        "completion_tokens": 858,
+        "total_tokens": 2208,
+        "call_count": 1
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 1350,
+        "completion_tokens": 858,
+        "total_tokens": 2208,
+        "call_count": 1
+      }
+    },
+    "total": {
+      "prompt_tokens": 1350,
+      "completion_tokens": 858,
+      "total_tokens": 2208,
+      "call_count": 1
+    }
+  },
+  "code_metrics": {
+    "total_lines": 0,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\3dd22e23-3754-49c4-b46d-2b00ca305e35_vld_empty.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 31.328996419906616,
+    "stage_times": {
+      "initialization": 0.0,
+      "static_analysis": 1.9060616493225098,
+      "analyzer_agent": 29.42193365097046
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 70.47784009439334,
+    "tokens_per_loc": 0
+  }
+}

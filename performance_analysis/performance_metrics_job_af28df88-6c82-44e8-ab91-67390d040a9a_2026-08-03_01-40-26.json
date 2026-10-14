@@ -1,0 +1,77 @@
+{
+  "run_info": {
+    "timestamp": "2026-08-03_01-37-55",
+    "config": {
+      "analyzer_model": "qwen2.5-coder:7b",
+      "skeptic_model": "qwen2.5-coder:7b",
+      "exploiter_model": "qwen2.5-coder:7b",
+      "generator_model": "qwen2.5-coder:7b",
+      "context_model": "qwen2.5-coder:7b",
+      "all_models": null,
+      "use_rag": true,
+      "skip_poc": false,
+      "auto_run": true
+    },
+    "total_time_seconds": 151.17643356323242
+  },
+  "token_usage": {
+    "by_agent": {
+      "analyzer": {
+        "prompt_tokens": 2353,
+        "completion_tokens": 387,
+        "total_tokens": 2740,
+        "call_count": 1
+      },
+      "skeptic": {
+        "prompt_tokens": 791,
+        "completion_tokens": 226,
+        "total_tokens": 1017,
+        "call_count": 1
+      },
+      "exploiter": {
+        "prompt_tokens": 555,
+        "completion_tokens": 219,
+        "total_tokens": 774,
+        "call_count": 1
+      }
+    },
+    "by_model": {
+      "qwen2.5-coder:7b": {
+        "prompt_tokens": 3699,
+        "completion_tokens": 832,
+        "total_tokens": 4531,
+        "call_count": 3
+      }
+    },
+    "total": {
+      "prompt_tokens": 3699,
+      "completion_tokens": 832,
+      "total_tokens": 4531,
+      "call_count": 3
+    }
+  },
+  "code_metrics": {
+    "total_lines": 15,
+    "file_count": 1,
+    "files": [
+      "C:\\Project\\VLD\\uploads\\af28df88-6c82-44e8-ab91-67390d040a9a_ReentrancyVault.sol"
+    ]
+  },
+  "time_metrics": {
+    "total_seconds": 151.17643356323242,
+    "stage_times": {
+      "initialization": 0.0009999275207519531,
+      "static_analysis": 9.111989736557007,
+      "analyzer_agent": 17.402099609375,
+      "skeptic_agent": 9.802956342697144,
+      "exploiter_agent": 9.688384294509888,
+      "generator_agent": 62.69176697731018,
+      "exploit_runner": 42.476226806640625,
+      "results_reporting": 0.0
+    }
+  },
+  "derived_metrics": {
+    "tokens_per_second": 29.97160267115855,
+    "tokens_per_loc": 302.06666666666666
+  }
+}
